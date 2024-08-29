@@ -7,13 +7,16 @@ using ObjectiveManager.Domain.Models;
 
 namespace ObjectiveManager.DataAccess;
 
+// todo: проверять при каждом запросе, ято формат файла остается корректен
+// (по крайней мере первая строка хедеров)
+// todo: ограничивать с помощью критических секций доступ к файлу
 public class ObjectiveCsvRepository : IObjectiveRepository
 {
-    private readonly string _pathToCsvFile = "../../../Data/Objectives.csv";
+    private readonly string _pathToCsvFile = "../Data/Objectives.csv";
     
     public string Create(ObjectiveCreation newObjective)
     {
-        var id = new Guid().ToString();
+        var id = Guid.NewGuid().ToString();
         var objective = new Objective(
             Id: id,
             Definition: newObjective.Definition,
@@ -21,11 +24,12 @@ public class ObjectiveCsvRepository : IObjectiveRepository
             Status: ObjectiveStatus.Opened,
             Comment: newObjective.Comment);
 
-        using var streamWriter = new StreamWriter(_pathToCsvFile);
+        using var streamWriter = new StreamWriter(_pathToCsvFile, true);
         using var csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture);
         
         // todo: проверка на совпадающий id с существующей записью
-        csvWriter.WriteRecord(objective);
+        csvWriter.NextRecord();
+        csvWriter.WriteRecord<Objective>(objective);
         
         return id;
     }
@@ -51,21 +55,23 @@ public class ObjectiveCsvRepository : IObjectiveRepository
             objectives = csv.GetRecords<Objective>().ToList();
         }
 
-        var objective = objectives.FirstOrDefault(obj => obj.Id == updatedObjective.Id);
-        if (objective is null)
+        var index = objectives.FindIndex(obj => obj.Id == updatedObjective.Id);
+        if (index == -1)
         {
             throw new ArgumentException($"Objective with Id {updatedObjective.Id} not found");
         }
 
-        objective = updatedObjective;
+        objectives[index] = updatedObjective;
 
         using (var writer = new StreamWriter(_pathToCsvFile))
         using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
         {
+            csv.WriteHeader<Objective>();
+            csv.NextRecord();
             csv.WriteRecords(objectives);
         }
 
-        return objective;
+        return updatedObjective;
     }
 
     public Objective Delete(string id)
@@ -78,17 +84,21 @@ public class ObjectiveCsvRepository : IObjectiveRepository
             objectives = csv.GetRecords<Objective>().ToList();
         }
 
-        var objective = objectives.FirstOrDefault(obj => obj.Id == id);
-        if (objective is null)
+        var index = objectives.FindIndex(obj => obj.Id == id);
+        if (index == -1)
         {
             throw new ArgumentException($"Objective with Id {id} not found");
         }
 
-        objective = objective with { Status = ObjectiveStatus.Cancelled };
+        var objective = objectives[index];
+
+        objectives[index] = objective with { Status = ObjectiveStatus.Cancelled };
 
         using (var writer = new StreamWriter(_pathToCsvFile))
         using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
         {
+            csv.WriteHeader<Objective>();
+            csv.NextRecord();
             csv.WriteRecords(objectives);
         }
 
