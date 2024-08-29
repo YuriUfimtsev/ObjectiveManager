@@ -6,9 +6,9 @@ public interface IObjectiveRepository
 {
     public string Create(ObjectiveCreation newObjective);
     
-    public Objective Get(string id);
+    public Objective? Get(string id);
     
-    public Objective Update(Objective objective);
+    public Objective Update(Objective updatedObjective);
     
     public Objective Delete(string id);
 }
