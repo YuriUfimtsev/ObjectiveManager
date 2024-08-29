@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectiveManager.Domain", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectiveManager.DataAccess", "ObjectiveManager.DataAccess\ObjectiveManager.DataAccess.csproj", "{CDD27C6E-FF99-4C40-BB2B-D8DA09AD55E7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectiveManager.Application", "ObjectiveManager.Application\ObjectiveManager.Application.csproj", "{08152515-A56E-431A-8F08-EA5F5AB9EABF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{CDD27C6E-FF99-4C40-BB2B-D8DA09AD55E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDD27C6E-FF99-4C40-BB2B-D8DA09AD55E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDD27C6E-FF99-4C40-BB2B-D8DA09AD55E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08152515-A56E-431A-8F08-EA5F5AB9EABF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08152515-A56E-431A-8F08-EA5F5AB9EABF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08152515-A56E-431A-8F08-EA5F5AB9EABF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08152515-A56E-431A-8F08-EA5F5AB9EABF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
