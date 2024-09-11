@@ -1,10 +1,7 @@
-using ObjectiveManager.Application;
+using ObjectiveManager.Api;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddSwaggerGen();
-builder.Services.AddControllers();
-builder.Services.AddApplicationServices();
+builder.Services.AddServices();
 
 var app = builder.Build();
 

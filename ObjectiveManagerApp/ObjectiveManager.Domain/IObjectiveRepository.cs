@@ -1,14 +1,15 @@
-﻿using ObjectiveManager.Domain.Models;
+﻿using ObjectiveManager.Domain.Dto;
+using ObjectiveManager.Domain.Entities;
 
 namespace ObjectiveManager.Domain;
 
 public interface IObjectiveRepository
 {
-    public string Create(ObjectiveCreation newObjective);
+    public string Create(CreateObjectiveDto newObjective);
     
-    public Objective? Get(string id);
+    public ObjectiveEntity? Get(string id);
     
-    public Objective Update(Objective updatedObjective);
+    public void Update(ObjectiveEntity updatedObjective);
     
-    public Objective Delete(string id);
+    public void Delete(string id);
 }

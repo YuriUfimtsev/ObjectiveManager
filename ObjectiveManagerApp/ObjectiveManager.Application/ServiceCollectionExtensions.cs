@@ -9,6 +9,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddRepositories();
         services.AddSingleton<IObjectiveService, ObjectiveService>();
+        services.AddAutoMapper(typeof(MappingProfile));
 
         return services;
     }

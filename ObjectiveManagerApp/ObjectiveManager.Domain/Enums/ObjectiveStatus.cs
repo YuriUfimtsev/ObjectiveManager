@@ -1,4 +1,4 @@
-﻿namespace ObjectiveManager.Domain.Models;
+﻿namespace ObjectiveManager.Domain.Enums;
 
 public enum ObjectiveStatus
 {

@@ -1,26 +1,41 @@
-﻿using ObjectiveManager.Domain;
-using ObjectiveManager.Domain.Models;
+﻿using AutoMapper;
+using ObjectiveManager.Application.Models;
+using ObjectiveManager.Domain;
+using ObjectiveManager.Domain.Dto;
+using ObjectiveManager.Domain.Entities;
 
 namespace ObjectiveManager.Application;
 
 public class ObjectiveService : IObjectiveService
 {
     private readonly IObjectiveRepository _objectiveRepository;
+    private readonly IMapper _mapper;
 
-    public ObjectiveService(IObjectiveRepository objectiveRepository)
+    public ObjectiveService(
+        IObjectiveRepository objectiveRepository,
+        IMapper mapper)
     {
         _objectiveRepository = objectiveRepository;
+        _mapper = mapper;
     }
 
-    public string Create(ObjectiveCreation newObjective)
+    public string Create(CreateObjectiveDto newObjective)
         => _objectiveRepository.Create(newObjective);
 
     public Objective? Get(string id)
-        => _objectiveRepository.Get(id);
+    {
+        var objectiveEntity = _objectiveRepository.Get(id);
+        var objective = _mapper.Map<Objective>(objectiveEntity);
 
-    public Objective Update(Objective updatedObjective)
-        => _objectiveRepository.Update(updatedObjective);
+        return objective;
+    }
 
-    public Objective Delete(string id) 
+    public void Update(Objective updatedObjective)
+    {
+        var objectiveEntity = _mapper.Map<ObjectiveEntity>(updatedObjective);
+        _objectiveRepository.Update(objectiveEntity);
+    }
+
+    public void Delete(string id) 
         => _objectiveRepository.Delete(id);
 }
