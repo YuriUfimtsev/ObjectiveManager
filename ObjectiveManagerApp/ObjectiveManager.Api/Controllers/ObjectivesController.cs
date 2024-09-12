@@ -10,12 +10,12 @@ namespace ObjectiveManager.Api.Controllers;
 // todo: корректная обработка dateTime и маппинг статусов задач
 [ApiController]
 [Route("[controller]")]
-public class ObjectiveController : ControllerBase
+public class ObjectivesController : ControllerBase
 {
     private readonly IObjectiveService _objectiveService;
     private readonly IMapper _mapper;
 
-    public ObjectiveController(
+    public ObjectivesController(
         IObjectiveService objectiveService,
         IMapper mapper)
     {
@@ -28,6 +28,13 @@ public class ObjectiveController : ControllerBase
     {
         var objective = _objectiveService.Get(objectiveId);
         return objective is not null ? Ok(objective) : NotFound();
+    }
+    
+    [HttpGet("all")]
+    public IActionResult GetAll()
+    {
+        var objectives = _objectiveService.GetAll();
+        return Ok(objectives);
     }
 
     [HttpPost]

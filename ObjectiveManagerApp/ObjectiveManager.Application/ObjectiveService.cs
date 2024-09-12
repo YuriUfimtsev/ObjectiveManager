@@ -30,6 +30,14 @@ public class ObjectiveService : IObjectiveService
         return objective;
     }
 
+    public List<Objective> GetAll()
+    {
+        var objectiveEntities = _objectiveRepository.GetAll();
+        var objectives = _mapper.Map<List<Objective>>(objectiveEntities);
+
+        return objectives;
+    }
+
     public void Update(Objective updatedObjective)
     {
         var objectiveEntity = _mapper.Map<ObjectiveEntity>(updatedObjective);

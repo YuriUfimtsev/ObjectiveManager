@@ -9,6 +9,8 @@ public interface IObjectiveService
     
     public Objective? Get(string id);
     
+    public List<Objective> GetAll();
+    
     public void Update(Objective updatedObjective);
     
     public void Delete(string id);

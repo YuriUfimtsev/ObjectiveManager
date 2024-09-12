@@ -50,6 +50,9 @@ public class ObjectiveCsvRepository : IObjectiveRepository
         }
     }
 
+    public List<ObjectiveEntity> GetAll()
+        => FetchObjectivesThreadSafe();
+
     public void Update(ObjectiveEntity updatedObjective)
     {
         var objectives = FetchObjectivesThreadSafe();
