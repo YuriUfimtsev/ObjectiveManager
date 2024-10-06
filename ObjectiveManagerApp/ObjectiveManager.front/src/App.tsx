@@ -1,17 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { theme, Typography, Table, Flex, Button, Pagination, Col, Row, Modal } from 'antd';
 import { Layout } from 'antd/es';
 import type { TableProps } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import './styles/App.css';
-
-interface Objective {
-    id: number;
-    definition: string;
-    status: string;
-    finalDate: string;
-    comment: string;
-}
+import ApiClient from './api/ApiClient';
+import { Objective } from './api/models/Objective';
 
 type TablePagination<T extends object> = NonNullable<Exclude<TableProps<T>['pagination'], boolean>>;
 type TablePaginationPosition = NonNullable<TablePagination<any>['position']>[number];
@@ -24,6 +18,7 @@ function App() {
     
     const [ paginationPosition, setPaginationPosition ] = useState<TablePaginationPosition>('none');
 
+    const [ objectives, setObjectives ] = useState<Objective[]>([]);
     const [pagination, setPagination] = useState({
         current: 1,
         pageSize: 5,
@@ -47,15 +42,14 @@ function App() {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
 
-    const data: Objective[] = [
-        {
-            id: 0,
-            definition: "Цель",
-            status: "Установлена",
-            finalDate: "29 марта 2025",
-            comment: "Обязательна к выполнению"
-        },
-    ];
+    const setInitialState = async () => {
+        const objectives = await ApiClient.objectivesApi.objectivesAllGet();
+        setObjectives(objectives);
+    }
+    
+    useEffect(() => {
+        setInitialState()
+    }, []);
         
     return (
     <div className="App">
@@ -73,7 +67,7 @@ function App() {
                     gap="small"
                 >
                     <Table<Objective>
-                        dataSource={data}
+                        dataSource={objectives}
                         pagination={{ position: [paginationPosition] }}
                     >
                         <Column title="Номер" dataIndex="id" key="id" />
@@ -87,7 +81,7 @@ function App() {
                             <Pagination
                                 current={pagination.current}
                                 pageSize={pagination.pageSize}
-                                total={data.length}
+                                total={objectives.length}
                                 onChange={(page, pageSize) => setPagination({ current: page, pageSize })}
                                 //showSizeChanger
                                 //pageSizeOptions={['5', '10', '20']}
