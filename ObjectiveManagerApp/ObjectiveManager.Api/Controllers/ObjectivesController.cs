@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using ObjectiveManager.Application;
 using ObjectiveManager.Application.Models;
@@ -24,6 +25,8 @@ public class ObjectivesController : ControllerBase
     }
     
     [HttpGet("{objectiveId}")]
+    [ProducesResponseType(typeof(Objective), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult Get([FromRoute] string objectiveId)
     {
         var objective = _objectiveService.Get(objectiveId);
@@ -31,6 +34,7 @@ public class ObjectivesController : ControllerBase
     }
     
     [HttpGet("all")]
+    [ProducesResponseType(typeof(Objective[]), StatusCodes.Status200OK)]
     public IActionResult GetAll()
     {
         var objectives = _objectiveService.GetAll();
@@ -38,6 +42,7 @@ public class ObjectivesController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     public IActionResult Add([FromQuery] ObjectivePostDto objectivePostDto)
     {
         var createObjectiveDto = _mapper.Map<CreateObjectiveDto>(objectivePostDto);
@@ -45,6 +50,8 @@ public class ObjectivesController : ControllerBase
     }
 
     [HttpPut]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public IActionResult Update([FromQuery] ObjectiveUpdateDto objectiveUpdateDto)
     {
         try
@@ -60,6 +67,8 @@ public class ObjectivesController : ControllerBase
     }
 
     [HttpDelete("{objectiveId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public IActionResult Delete([FromRoute] string objectiveId)
     {
         try
