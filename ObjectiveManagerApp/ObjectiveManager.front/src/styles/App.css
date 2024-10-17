@@ -1,0 +1,16 @@
+﻿* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.navbar {
+    display: flex;
+    justify-content: flex-start;
+    text-align: center;
+    align-items: center;
+    color: #e6e6e6 !important; /* Пока не применяется */
+}
+
+.flex-button-margin {
+    margin-right: 20px;
+}
