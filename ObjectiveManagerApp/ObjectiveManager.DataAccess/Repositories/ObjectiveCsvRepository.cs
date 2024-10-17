@@ -1,12 +1,11 @@
 ﻿using System.Globalization;
 using CsvHelper;
-
 using ObjectiveManager.Domain;
 using ObjectiveManager.Domain.Dto;
 using ObjectiveManager.Domain.Entities;
 using ObjectiveManager.Domain.Enums;
 
-namespace ObjectiveManager.DataAccess;
+namespace ObjectiveManager.DataAccess.Repositories;
 
 // todo: проверять при каждом обращении к файлу, что формат файла остается корректен
 // (по крайней мере первая строка хедеров)
