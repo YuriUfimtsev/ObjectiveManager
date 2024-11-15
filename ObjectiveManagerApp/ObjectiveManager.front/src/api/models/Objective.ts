@@ -18,6 +18,7 @@ import {
     ObjectiveStatusFromJSON,
     ObjectiveStatusFromJSONTyped,
     ObjectiveStatusToJSON,
+    ObjectiveStatusToJSONTyped,
 } from './ObjectiveStatus';
 
 /**
@@ -85,10 +86,15 @@ export function ObjectiveFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     };
 }
 
-export function ObjectiveToJSON(value?: Objective | null): any {
+  export function ObjectiveToJSON(json: any): Objective {
+      return ObjectiveToJSONTyped(json, false);
+  }
+
+  export function ObjectiveToJSONTyped(value?: Objective | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

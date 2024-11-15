@@ -5,7 +5,7 @@ namespace ObjectiveManager.Application;
 
 public interface IObjectiveService
 {
-    public string Create(CreateObjectiveDto newObjective);
+    public Task<string> Create(CreateObjectiveDto newObjective);
     
     public Objective? Get(string id);
     

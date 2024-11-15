@@ -3,6 +3,7 @@ using ObjectiveManager.Application.Models;
 using ObjectiveManager.Domain;
 using ObjectiveManager.Domain.Dto;
 using ObjectiveManager.Domain.Entities;
+using ObjectiveManager.Domain.Interfaces;
 
 namespace ObjectiveManager.Application;
 
@@ -19,8 +20,8 @@ public class ObjectiveService : IObjectiveService
         _mapper = mapper;
     }
 
-    public string Create(CreateObjectiveDto newObjective)
-        => _objectiveRepository.Create(newObjective);
+    public async Task<string> Create(CreateObjectiveDto newObjective)
+        => await _objectiveRepository.Create(newObjective);
 
     public Objective? Get(string id)
     {

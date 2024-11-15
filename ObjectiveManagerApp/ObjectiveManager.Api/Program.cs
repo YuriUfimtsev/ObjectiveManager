@@ -14,10 +14,10 @@ builder.Services.AddCors();
 var app = builder.Build();
 
 app.UseCors(cpb => cpb.AllowAnyOrigin());
+app.UseSwagger();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
     app.UseSwaggerUI();
 }
 

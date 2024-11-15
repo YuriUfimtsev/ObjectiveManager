@@ -13,7 +13,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddDataAccessRepositories();
         services.AddDataAccessInfrastructure(configuration);
-        services.AddSingleton<IObjectiveService, ObjectiveService>();
+        services.AddScoped<IObjectiveService, ObjectiveService>();
         services.AddAutoMapper(typeof(MappingProfile));
 
         return services;

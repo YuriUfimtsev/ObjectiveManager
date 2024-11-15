@@ -6,6 +6,7 @@ using ObjectiveManager.DataAccess.Models;
 using ObjectiveManager.DataAccess.Repositories;
 using ObjectiveManager.DataAccess.Settings;
 using ObjectiveManager.Domain;
+using ObjectiveManager.Domain.Interfaces;
 
 namespace ObjectiveManager.DataAccess.Extensions;
 
@@ -13,7 +14,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddDataAccessRepositories(this IServiceCollection services)
     {
-        services.AddSingleton<IObjectiveRepository, ObjectiveCsvRepository>();
+        services.AddScoped<IObjectiveRepository, ObjectivePostgresRepository>();
         
         return services;
     }

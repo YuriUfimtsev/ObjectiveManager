@@ -7,4 +7,4 @@ public record ObjectiveEntity(
     string Definition,
     ObjectiveStatus Status,
     DateTime FinalDate,
-    string? Comment);
+    string? Comment) : IEntity<string>;
