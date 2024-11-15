@@ -1,4 +1,29 @@
 services:
+  objective-manager-front:
+    build:
+      context: ./ObjectiveManagerApp/ObjectiveManager.front
+      dockerfile: ./Dockerfile
+    container_name: objective-manager-front
+    depends_on:
+      - objective-manager-api
+    environment:
+      - PORT
+    ports:
+      - "5000:5000"
+
+  objective-manager-api:
+    build:
+      context: ./ObjectiveManagerApp
+      dockerfile: ObjectiveManager.Api/Dockerfile
+    container_name: objective-manager-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://*:5278
+    depends_on:
+      - postgresql
+    ports:
+      - "5278:5278"
+  
   postgresql:
     image: postgres:17.0
     container_name: local-postgres
@@ -10,7 +35,7 @@ services:
     volumes:
       - pgdb-data:/var/lib/postgresql/data
     ports:
-      - "15432:5432"
+      - "5432:5432"
 
 volumes:
   pgdb-data:
