@@ -49,3 +49,7 @@ export function ObjectiveStatusToJSON(value?: ObjectiveStatus | null): any {
     return value as any;
 }
 
+export function ObjectiveStatusToJSONTyped(value: any, ignoreDiscriminator: boolean): ObjectiveStatus {
+    return value as ObjectiveStatus;
+}
+
