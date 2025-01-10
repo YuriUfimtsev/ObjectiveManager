@@ -35,7 +35,7 @@ public class ObjectivesController : ControllerBase
     
     [HttpGet("all")]
     [ProducesResponseType(typeof(Objective[]), StatusCodes.Status200OK)]
-    public IActionResult GetAll()
+    public async Task<IActionResult> GetAll()
     {
         var objectives = _objectiveService.GetAll();
         return Ok(objectives);
@@ -43,16 +43,17 @@ public class ObjectivesController : ControllerBase
 
     [HttpPost]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-    public IActionResult Add([FromQuery] ObjectivePostDto objectivePostDto)
+    public async Task<IActionResult> Add([FromQuery] ObjectivePostDto objectivePostDto)
     {
         var createObjectiveDto = _mapper.Map<CreateObjectiveDto>(objectivePostDto);
-        return Ok(_objectiveService.Create(createObjectiveDto));
+        var objectiveId = await _objectiveService.Create(createObjectiveDto);
+        return Ok(objectiveId);
     }
 
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    public IActionResult Update([FromQuery] ObjectiveUpdateDto objectiveUpdateDto)
+    public async Task<IActionResult> Update([FromQuery] ObjectiveUpdateDto objectiveUpdateDto)
     {
         try
         {
@@ -69,7 +70,7 @@ public class ObjectivesController : ControllerBase
     [HttpDelete("{objectiveId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    public IActionResult Delete([FromRoute] string objectiveId)
+    public async Task<IActionResult> Delete([FromRoute] string objectiveId)
     {
         try
         {

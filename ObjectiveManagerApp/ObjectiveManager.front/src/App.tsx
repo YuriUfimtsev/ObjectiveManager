@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {theme, Typography, Table, Flex, Button, Pagination, Col, Row, Modal, Space, Form, DatePicker, Input} from 'antd';
+import {theme, Typography, Table, Flex, Button, Pagination, Col, Row, Modal, Space, Form, DatePicker, Input, TablePaginationConfig} from 'antd';
 import {Layout} from 'antd/es';
 import type {TableProps} from 'antd';
 import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
@@ -20,15 +20,21 @@ function App() {
 
     const [paginationPosition, setPaginationPosition] = useState<TablePaginationPosition>('none');
 
+    const paginationConfig :TablePaginationConfig = {
+        pageSize: 40,
+        position: ["none" as TablePaginationPosition], // Позиция пагинации
+    };
+    
     const [objectives, setObjectives] = useState<Objective[]>([]);
     const [pagination, setPagination] = useState({
         current: 1,
-        pageSize: 5,
+        pageSize: 40,
     });
 
     const [form] = Form.useForm();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [areObjectivesChaged, setObjectivesAreChanged] = useState(false);
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -40,8 +46,10 @@ function App() {
 
     const handleDeleteObjective = async (id: string) => {
         const requestData: ObjectivesObjectiveIdDeleteRequest = {objectiveId: id}
+        console.log("before")
         await ApiClient.objectivesApi.objectivesObjectiveIdDelete(requestData);
-        await setObjectivesState();
+        console.log("after")
+        setObjectivesAreChanged(true);
     };
 
     const handleCreateObjective = async (validate: React.FormEvent<HTMLFormElement>) => {
@@ -55,7 +63,7 @@ function App() {
             }
             await ApiClient.objectivesApi.objectivesPost(requestData);
 
-            await setObjectivesState();
+            setObjectivesAreChanged(true)
             setIsModalOpen(false);
         } catch (err) {
             console.error('Найдены ошибки заполнения:', err);
@@ -66,14 +74,14 @@ function App() {
         token: {colorBgContainer, borderRadiusLG},
     } = theme.useToken();
 
-    const setObjectivesState = async () => {
-        const objectives = await ApiClient.objectivesApi.objectivesAllGet();
-        setObjectives(objectives);
-    }
-
     useEffect(() => {
+        const setObjectivesState = async () => {
+            const objectives = await ApiClient.objectivesApi.objectivesAllGet();
+            setObjectives(objectives);
+        }
         setObjectivesState()
-    }, []);
+        setObjectivesAreChanged(false)
+    }, [areObjectivesChaged]);
 
     return (
         <div className="App">
@@ -92,7 +100,7 @@ function App() {
                     >
                         <Table<Objective>
                             dataSource={objectives}
-                            pagination={{position: [paginationPosition]}}
+                            pagination={paginationConfig}
                         >
                             <Column title="Название" dataIndex="definition" key="definition"/>
                             <Column title="Статус" dataIndex="status" key="status"/>
