@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using ObjectiveManager.DataAccess.Extensions;
 
 namespace ObjectiveManager.Application;
@@ -21,9 +20,9 @@ public static class ServiceCollectionExtensions
             options.AddPolicy("AllowSpecificOrigin",
                 builder =>
                 {
-                    builder.WithOrigins("http://localhost:5000")
+                    builder.WithOrigins("http://localhost:3000")
                         .AllowAnyHeader()
-                        .AllowAnyMethod(); // Эта строка разрешает все методы, включая DELETE
+                        .AllowAnyMethod();
                 });
         });
 

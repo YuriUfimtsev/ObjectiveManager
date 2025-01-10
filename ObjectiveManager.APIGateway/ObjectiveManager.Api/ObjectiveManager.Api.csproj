@@ -21,10 +21,4 @@
       <ProjectReference Include="..\ObjectiveManager.Application\ObjectiveManager.Application.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
-
 </Project>

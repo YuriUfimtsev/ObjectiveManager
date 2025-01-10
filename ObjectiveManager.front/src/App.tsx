@@ -46,9 +46,7 @@ function App() {
 
     const handleDeleteObjective = async (id: string) => {
         const requestData: ObjectivesObjectiveIdDeleteRequest = {objectiveId: id}
-        console.log("before")
         await ApiClient.objectivesApi.objectivesObjectiveIdDelete(requestData);
-        console.log("after")
         setObjectivesAreChanged(true);
     };
 

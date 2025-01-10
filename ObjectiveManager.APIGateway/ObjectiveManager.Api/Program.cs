@@ -8,9 +8,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
 builder.Services.AddApplicationServices(builder.Configuration);
-
-builder.Services.AddCors();
-
 var app = builder.Build();
 
 app.UseCors("AllowSpecificOrigin");
