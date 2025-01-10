@@ -24,5 +24,8 @@ WORKDIR /app
 RUN mkdir -p /Data
 COPY Data/Objectives.csv /Data/
 
+# Install curl for healthcheck
+RUN apt-get update && apt-get install -y curl
+
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "ObjectiveManager.Api.dll"]

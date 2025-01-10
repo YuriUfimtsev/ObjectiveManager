@@ -1,37 +1,36 @@
 services:
   objective-manager-front:
     build:
-      context: ./ObjectiveManagerApp/ObjectiveManager.front
+      context: ./ObjectiveManager.front
       dockerfile: ./Dockerfile
-    container_name: objective-manager-front
     depends_on:
       - objective-manager-api
-    environment:
-      - PORT
     ports:
-      - "5000:5000"
+      - "3000:3000"
 
   objective-manager-api:
     build:
-      context: ./ObjectiveManagerApp
+      context: ./ObjectiveManager.APIGateway
       dockerfile: ObjectiveManager.Api/Dockerfile
-    container_name: objective-manager-api
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://*:5278
     depends_on:
-      - postgresql
+      - postgres
+    environment:
+      - ASPNETCORE_URLS=http://*:5000
     ports:
-      - "5278:5278"
+      - "5000:5000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/Objectives/all"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
-  postgresql:
+  postgres:
     image: postgres:17.0
-    container_name: postgres
     restart: unless-stopped
     environment:
       POSTGRES_DB: "ObjectiveManagerDB"
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "password"
+      POSTGRES_USER:  ${POSTGRES_USER}
+      POSTGRES_PASSWORD:  ${POSTGRES_PASSWORD}
       PGPORT: 5433
     volumes:
       - pgdb-data:/var/lib/postgresql/data
