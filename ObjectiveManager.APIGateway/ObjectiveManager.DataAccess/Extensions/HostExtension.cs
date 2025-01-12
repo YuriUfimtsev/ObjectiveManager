@@ -22,7 +22,6 @@ public static class HostExtensions
             Thread.Sleep(5000);
         }
 
-        var c = context.Database.CanConnect();
         if (tries > maxTries) throw new Exception("Can't connect to database");
         
         context.Database.Migrate();

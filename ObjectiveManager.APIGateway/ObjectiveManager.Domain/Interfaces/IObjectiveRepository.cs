@@ -9,7 +9,7 @@ public interface IObjectiveRepository
     
     public Task<ObjectiveEntity?> Get(string id);
     
-    public new List<ObjectiveEntity> GetAll();
+    public List<ObjectiveEntity> GetAll();
     
     public Task Update(ObjectiveEntity updatedObjective);
     

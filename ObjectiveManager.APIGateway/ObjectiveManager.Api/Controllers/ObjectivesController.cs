@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ObjectiveManager.Application;
 using ObjectiveManager.Application.Models;
 using ObjectiveManager.Api.Dto;
+using ObjectiveManager.Application.Services;
 using ObjectiveManager.Domain.Dto;
 
 namespace ObjectiveManager.Api.Controllers;
@@ -58,7 +59,7 @@ public class ObjectivesController : ControllerBase
         try
         {
             var updatedObjective = _mapper.Map<Objective>(objectiveUpdateDto);
-            _objectiveService.Update(updatedObjective);
+            await _objectiveService.Update(updatedObjective);
             return Ok();
         }
         catch (ArgumentException e)
@@ -74,7 +75,7 @@ public class ObjectivesController : ControllerBase
     {
         try
         {
-            _objectiveService.Delete(objectiveId);
+            await _objectiveService.Delete(objectiveId);
             return Ok();
         }
         catch (ArgumentException e)

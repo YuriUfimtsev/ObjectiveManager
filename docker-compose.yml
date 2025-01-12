@@ -15,25 +15,22 @@ services:
     depends_on:
       - postgres
     environment:
-      - ASPNETCORE_URLS=http://*:5000
+      - ASPNETCORE_URLS=http://+:5000
+      - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - "5000:5000"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/Objectives/all"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
 
   postgres:
     image: postgres:17.0
     restart: unless-stopped
     environment:
-      POSTGRES_DB: "ObjectiveManagerDB"
-      POSTGRES_USER:  ${POSTGRES_USER}
-      POSTGRES_PASSWORD:  ${POSTGRES_PASSWORD}
-      PGPORT: 5433
+      POSTGRES_DB: "dev_ObjectiveManagerDB"
+      POSTGRES_USER:  "dev_user"
+      POSTGRES_PASSWORD:  "dev_password"
+    ports:
+      - "5433:5432"
     volumes:
-      - pgdb-data:/var/lib/postgresql/data
+      - pgdb-data:/var/lib/postgresql/dev_data
 
 volumes:
   pgdb-data:

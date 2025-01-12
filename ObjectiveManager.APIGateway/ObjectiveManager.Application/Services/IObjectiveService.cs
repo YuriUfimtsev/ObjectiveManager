@@ -1,7 +1,7 @@
 ﻿using ObjectiveManager.Application.Models;
 using ObjectiveManager.Domain.Dto;
 
-namespace ObjectiveManager.Application;
+namespace ObjectiveManager.Application.Services;
 
 public interface IObjectiveService
 {
@@ -11,7 +11,7 @@ public interface IObjectiveService
     
     public List<Objective> GetAll();
     
-    public void Update(Objective updatedObjective);
+    public Task Update(Objective updatedObjective);
     
-    public void Delete(string id);
+    public Task Delete(string id);
 }

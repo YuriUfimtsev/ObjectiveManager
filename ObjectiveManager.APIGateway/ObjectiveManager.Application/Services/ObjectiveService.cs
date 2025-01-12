@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
 using ObjectiveManager.Application.Models;
-using ObjectiveManager.Domain;
 using ObjectiveManager.Domain.Dto;
 using ObjectiveManager.Domain.Entities;
 using ObjectiveManager.Domain.Interfaces;
 
-namespace ObjectiveManager.Application;
+namespace ObjectiveManager.Application.Services;
 
 public class ObjectiveService : IObjectiveService
 {
@@ -39,12 +38,12 @@ public class ObjectiveService : IObjectiveService
         return objectives;
     }
 
-    public void Update(Objective updatedObjective)
+    public async Task Update(Objective updatedObjective)
     {
         var objectiveEntity = _mapper.Map<ObjectiveEntity>(updatedObjective);
-        _objectiveRepository.Update(objectiveEntity);
+        await _objectiveRepository.Update(objectiveEntity);
     }
 
-    public void Delete(string id) 
-        => _objectiveRepository.Delete(id);
+    public async Task Delete(string id) 
+        => await _objectiveRepository.Delete(id);
 }

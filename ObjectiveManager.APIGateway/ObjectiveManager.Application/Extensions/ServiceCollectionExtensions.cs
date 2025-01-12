@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ObjectiveManager.Application.Services;
 using ObjectiveManager.DataAccess.Extensions;
 
 namespace ObjectiveManager.Application;
