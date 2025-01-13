@@ -2,5 +2,5 @@
 
 public record CreateObjectiveDto(
     string Definition,
-    DateTime FinalDate,
+    DateTimeOffset FinalDate,
     string? Comment);

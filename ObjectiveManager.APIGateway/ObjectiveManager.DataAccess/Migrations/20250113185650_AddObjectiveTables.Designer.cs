@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ObjectiveManager.DataAccess.Models;
@@ -11,9 +12,11 @@ using ObjectiveManager.DataAccess.Models;
 namespace ObjectiveManager.DataAccess.Migrations
 {
     [DbContext(typeof(ObjectivesContext))]
-    partial class ObjectivesContextModelSnapshot : ModelSnapshot
+    [Migration("20250113185650_AddObjectiveTables")]
+    partial class AddObjectiveTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,7 +49,7 @@ namespace ObjectiveManager.DataAccess.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("Objectives", (string)null);
+                    b.ToTable("Objectives");
                 });
 
             modelBuilder.Entity("ObjectiveManager.Domain.Entities.ObjectiveStatusEntity", b =>
@@ -63,7 +66,7 @@ namespace ObjectiveManager.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ObjectiveStatuses", (string)null);
+                    b.ToTable("ObjectiveStatuses");
 
                     b.HasData(
                         new

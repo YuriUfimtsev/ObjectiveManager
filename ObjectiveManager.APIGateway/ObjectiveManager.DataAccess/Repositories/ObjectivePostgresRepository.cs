@@ -1,12 +1,11 @@
-﻿using ObjectiveManager.DataAccess.Models;
-using ObjectiveManager.Domain.Dto;
+﻿using Microsoft.EntityFrameworkCore;
+using ObjectiveManager.DataAccess.Models;
 using ObjectiveManager.Domain.Entities;
-using ObjectiveManager.Domain.Enums;
 using ObjectiveManager.Domain.Interfaces;
 
 namespace ObjectiveManager.DataAccess.Repositories;
 
-public class ObjectivePostgresRepository : CrudRepository<string, ObjectiveEntity>,
+public class ObjectivePostgresRepository : CrudRepository<Guid, ObjectiveEntity>,
     IObjectiveRepository
 {
     public ObjectivePostgresRepository(ObjectivesContext context)
@@ -14,35 +13,31 @@ public class ObjectivePostgresRepository : CrudRepository<string, ObjectiveEntit
     {
     }
 
-    public async Task<string> Create(CreateObjectiveDto newObjective)
-    {
-        var id = Guid.NewGuid().ToString();
-        var objective = new ObjectiveEntity(
-            Id: id,
-            Definition: newObjective.Definition,
-            FinalDate: newObjective.FinalDate,
-            Status: ObjectiveStatus.Opened,
-            Comment: newObjective.Comment);
+    public async Task<Guid> Create(ObjectiveEntity objective) 
+        => await AddAsync(objective);
 
-        return await AddAsync(objective);
-    }
+    public async Task<ObjectiveEntity?> Get(Guid id)
+        => await Context.Set<ObjectiveEntity>()
+            .Include(obj => obj.Status)
+            .FirstOrDefaultAsync(obj => obj.Id == id);
 
-    public async Task<ObjectiveEntity?> Get(string id)
-        => await GetAsync(id);
-
-    public new List<ObjectiveEntity> GetAll()
-        => base.GetAll().ToList();
+    public new async Task<List<ObjectiveEntity>> GetAll()
+        => await Context.Set<ObjectiveEntity>()
+            .Include(obj => obj.Status)
+            .ToListAsync();
 
     public async Task Update(ObjectiveEntity updatedObjective)
     {
-        // Пока передаём Id тоже, чтобы чистый record ObjectiveEntity в класс не преобразовывать
         await base.UpdateAsync(updatedObjective.Id,
-            objective => new ObjectiveEntity(updatedObjective.Id,
-                updatedObjective.Definition, updatedObjective.Status,
-                updatedObjective.FinalDate, updatedObjective.Comment)
-        );
+            objective => new ObjectiveEntity
+            {
+                Definition = updatedObjective.Definition,
+                FinalDate = updatedObjective.FinalDate,
+                StatusId = updatedObjective.StatusId,
+                Comment = updatedObjective.Comment
+            });
     }
 
-    public async Task Delete(string objectiveId)
+    public async Task Delete(Guid objectiveId)
         => await base.DeleteAsync(objectiveId);
 }

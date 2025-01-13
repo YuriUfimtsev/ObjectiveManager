@@ -8,6 +8,7 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<Objective, ObjectiveEntity>().ReverseMap();
+        CreateMap<ObjectiveEntity, Objective>();
+        CreateMap<ObjectiveStatusEntity, ObjectiveStatus>();
     }
 }

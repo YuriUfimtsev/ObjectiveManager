@@ -12,7 +12,8 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddDataAccessRepositories(this IServiceCollection services)
     {
         services.AddScoped<IObjectiveRepository, ObjectivePostgresRepository>();
-
+        services.AddScoped<IObjectiveStatusRepository, ObjectiveStatusRepository>();
+        
         return services;
     }
 

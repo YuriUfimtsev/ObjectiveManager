@@ -1,4 +1,4 @@
-using ObjectiveManager.Application;
+using ObjectiveManager.Application.Extensions;
 using ObjectiveManager.DataAccess.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -5,13 +5,13 @@ namespace ObjectiveManager.Domain.Interfaces;
 
 public interface IObjectiveRepository
 {
-    public Task<string> Create(CreateObjectiveDto newObjective);
+    public Task<Guid> Create(ObjectiveEntity newObjective);
     
-    public Task<ObjectiveEntity?> Get(string id);
+    public Task<ObjectiveEntity?> Get(Guid id);
     
-    public List<ObjectiveEntity> GetAll();
+    public Task<List<ObjectiveEntity>> GetAll();
     
     public Task Update(ObjectiveEntity updatedObjective);
     
-    public Task Delete(string id);
+    public Task Delete(Guid id);
 }

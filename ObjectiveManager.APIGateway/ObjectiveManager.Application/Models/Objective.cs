@@ -1,4 +1,4 @@
-﻿using ObjectiveManager.Domain.Enums;
+﻿using ObjectiveManager.Domain.Entities;
 
 namespace ObjectiveManager.Application.Models;
 
@@ -8,5 +8,5 @@ public record Objective(
     string Id,
     string Definition,
     ObjectiveStatus Status,
-    DateTime FinalDate,
+    DateTimeOffset FinalDate,
     string? Comment);

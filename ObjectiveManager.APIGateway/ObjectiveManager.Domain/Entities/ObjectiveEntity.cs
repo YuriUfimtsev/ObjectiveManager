@@ -1,10 +1,12 @@
-﻿using ObjectiveManager.Domain.Enums;
+﻿namespace ObjectiveManager.Domain.Entities;
 
-namespace ObjectiveManager.Domain.Entities;
-
-public record ObjectiveEntity(
-    string Id,
-    string Definition,
-    ObjectiveStatus Status,
-    DateTime FinalDate,
-    string? Comment) : IEntity<string>;
+public record ObjectiveEntity : IEntity<Guid>
+{
+    public Guid Id { get; set; }
+    public required string Definition { get; init; }
+    public required DateTimeOffset FinalDate {get; init; }
+    public required string Comment { get; init; }
+    
+    public required long StatusId { get; init; }
+    public ObjectiveStatusEntity? Status { get; set; }
+}

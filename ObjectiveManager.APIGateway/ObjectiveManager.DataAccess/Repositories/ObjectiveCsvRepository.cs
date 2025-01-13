@@ -2,7 +2,6 @@
 using CsvHelper;
 using ObjectiveManager.Domain.Dto;
 using ObjectiveManager.Domain.Entities;
-using ObjectiveManager.Domain.Enums;
 using ObjectiveManager.Domain.Interfaces;
 
 namespace ObjectiveManager.DataAccess.Repositories;
@@ -15,76 +14,69 @@ public class ObjectiveCsvRepository : IObjectiveRepository
     private readonly object _csvFileLockObject = new();
 
     // Разрешаем сохранять цели с совпадающими названиями
-    public Task<string> Create(CreateObjectiveDto newObjective)
-        => Task.Run(() =>
+    public Task<Guid> Create(ObjectiveEntity newObjective)
+    {
+        var id = Guid.NewGuid();
+        var objective = newObjective with { Id = id };
+
+        lock (_csvFileLockObject)
         {
-            var id = Guid.NewGuid().ToString();
-            var objective = new ObjectiveEntity(
-                Id: id,
-                Definition: newObjective.Definition,
-                FinalDate: newObjective.FinalDate,
-                Status: ObjectiveStatus.Opened,
-                Comment: newObjective.Comment);
+            using var streamWriter = new StreamWriter(_pathToCsvFile, true);
+            using var csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture);
 
-            lock (_csvFileLockObject)
-            {
-                using var streamWriter = new StreamWriter(_pathToCsvFile, true);
-                using var csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture);
+            csvWriter.NextRecord();
+            csvWriter.WriteRecordsAsync(new List<ObjectiveEntity> { objective });
+        }
 
-                csvWriter.NextRecord();
-                csvWriter.WriteRecordsAsync(new List<ObjectiveEntity> { objective });
-            }
+        return Task.FromResult(id);
+    }
 
-            return id;
-        });
-
-    public Task<ObjectiveEntity?> Get(string id)
-        => Task.Run(() =>
+    public Task<ObjectiveEntity?> Get(Guid id)
+    {
+        lock (_csvFileLockObject)
         {
-            lock (_csvFileLockObject)
-            {
-                using var streamReader = new StreamReader(_pathToCsvFile);
-                using var csvReader = new CsvReader(streamReader, CultureInfo.InvariantCulture);
+            using var streamReader = new StreamReader(_pathToCsvFile);
+            using var csvReader = new CsvReader(streamReader, CultureInfo.InvariantCulture);
 
-                return csvReader.GetRecords<ObjectiveEntity>()
-                    .FirstOrDefault(obj => obj.Id == id);
-            }
-        });
+            return Task.FromResult(
+                csvReader.GetRecords<ObjectiveEntity>()
+                    .FirstOrDefault(obj => obj.Id == id));
+        }
+    }
 
-    public List<ObjectiveEntity> GetAll()
-        => FetchObjectivesThreadSafe();
+    public Task<List<ObjectiveEntity>> GetAll()
+        => Task.FromResult(FetchObjectivesThreadSafe());
 
     public Task Update(ObjectiveEntity updatedObjective)
-        => Task.Run(() =>
+    {
+        var objectives = FetchObjectivesThreadSafe();
+
+        var index = objectives.FindIndex(obj => obj.Id == updatedObjective.Id);
+        if (index == -1)
         {
-            var objectives = FetchObjectivesThreadSafe();
+            throw new ArgumentException($"Objective with Id {updatedObjective.Id} not found");
+        }
 
-            var index = objectives.FindIndex(obj => obj.Id == updatedObjective.Id);
-            if (index == -1)
-            {
-                throw new ArgumentException($"Objective with Id {updatedObjective.Id} not found");
-            }
+        objectives[index] = updatedObjective;
 
-            objectives[index] = updatedObjective;
+        WriteObjectivesThreadSafe(objectives);
+        return Task.CompletedTask;
+    }
 
-            WriteObjectivesThreadSafe(objectives);
-        });
+    public Task Delete(Guid id)
+    {
+        var objectives = FetchObjectivesThreadSafe();
 
-    public Task Delete(string id)
-        => Task.Run(() =>
+        var index = objectives.FindIndex(obj => obj.Id == id);
+        if (index == -1)
         {
-            var objectives = FetchObjectivesThreadSafe();
+            throw new ArgumentException($"Objective with Id {id} not found");
+        }
 
-            var index = objectives.FindIndex(obj => obj.Id == id);
-            if (index == -1)
-            {
-                throw new ArgumentException($"Objective with Id {id} not found");
-            }
-
-            objectives[index] = objectives[index] with { Status = ObjectiveStatus.Cancelled };
-
-            WriteObjectivesThreadSafe(objectives);
-        });
+        objectives.RemoveAt(index);
+        WriteObjectivesThreadSafe(objectives);
+        return Task.CompletedTask;
+    }
 
     private List<ObjectiveEntity> FetchObjectivesThreadSafe()
     {

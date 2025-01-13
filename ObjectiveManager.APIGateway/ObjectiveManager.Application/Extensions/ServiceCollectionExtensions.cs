@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ObjectiveManager.Application.Services;
 using ObjectiveManager.DataAccess.Extensions;
 
-namespace ObjectiveManager.Application;
+namespace ObjectiveManager.Application.Extensions;
 
 public static class ServiceCollectionExtensions
 {
@@ -13,8 +13,11 @@ public static class ServiceCollectionExtensions
     {
         services.AddDataAccessRepositories();
         services.AddDataAccessInfrastructure(configuration);
+        
+        services.AddScoped<IStatusesService, StatusesService>();
         services.AddScoped<IObjectiveService, ObjectiveService>();
-        services.AddAutoMapper(typeof(MappingProfile));
+        
+        services.AddAutoMapper(typeof(ObjectiveManager.Application.MappingProfile));
         
         services.AddCors(options =>
         {
