@@ -10,7 +10,6 @@ using ObjectiveManager.Domain.Dto;
 
 namespace ObjectiveManager.Api.Controllers;
 
-// todo: корректная обработка dateTime
 [ApiController]
 [Route("[controller]")]
 public class ObjectivesController : ControllerBase

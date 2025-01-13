@@ -59,8 +59,6 @@ export interface Objective {
     comment?: string | null;
 }
 
-
-
 /**
  * Check if a given object implements the Objective interface.
  */
@@ -86,11 +84,11 @@ export function ObjectiveFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     };
 }
 
-  export function ObjectiveToJSON(json: any): Objective {
-      return ObjectiveToJSONTyped(json, false);
-  }
+export function ObjectiveToJSON(json: any): Objective {
+    return ObjectiveToJSONTyped(json, false);
+}
 
-  export function ObjectiveToJSONTyped(value?: Objective | null, ignoreDiscriminator: boolean = false): any {
+export function ObjectiveToJSONTyped(value?: Objective | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

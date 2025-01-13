@@ -12,29 +12,32 @@
  * Do not edit the class manually.
  */
 
-
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
+ * @interface ObjectiveStatus
  */
-export const ObjectiveStatus = {
-    NUMBER_0: 0,
-    NUMBER_1: 1,
-    NUMBER_2: 2,
-    NUMBER_3: 3
-} as const;
-export type ObjectiveStatus = typeof ObjectiveStatus[keyof typeof ObjectiveStatus];
+export interface ObjectiveStatus {
+    /**
+     * 
+     * @type {number}
+     * @memberof ObjectiveStatus
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ObjectiveStatus
+     */
+    name?: string | null;
+}
 
-
-export function instanceOfObjectiveStatus(value: any): boolean {
-    for (const key in ObjectiveStatus) {
-        if (Object.prototype.hasOwnProperty.call(ObjectiveStatus, key)) {
-            if (ObjectiveStatus[key as keyof typeof ObjectiveStatus] === value) {
-                return true;
-            }
-        }
-    }
-    return false;
+/**
+ * Check if a given object implements the ObjectiveStatus interface.
+ */
+export function instanceOfObjectiveStatus(value: object): value is ObjectiveStatus {
+    return true;
 }
 
 export function ObjectiveStatusFromJSON(json: any): ObjectiveStatus {
@@ -42,14 +45,29 @@ export function ObjectiveStatusFromJSON(json: any): ObjectiveStatus {
 }
 
 export function ObjectiveStatusFromJSONTyped(json: any, ignoreDiscriminator: boolean): ObjectiveStatus {
-    return json as ObjectiveStatus;
+    if (json == null) {
+        return json;
+    }
+    return {
+        
+        'id': json['id'] == null ? undefined : json['id'],
+        'name': json['name'] == null ? undefined : json['name'],
+    };
 }
 
-export function ObjectiveStatusToJSON(value?: ObjectiveStatus | null): any {
-    return value as any;
+export function ObjectiveStatusToJSON(json: any): ObjectiveStatus {
+    return ObjectiveStatusToJSONTyped(json, false);
 }
 
-export function ObjectiveStatusToJSONTyped(value: any, ignoreDiscriminator: boolean): ObjectiveStatus {
-    return value as ObjectiveStatus;
+export function ObjectiveStatusToJSONTyped(value?: ObjectiveStatus | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
+    }
+
+    return {
+        
+        'id': value['id'],
+        'name': value['name'],
+    };
 }
 

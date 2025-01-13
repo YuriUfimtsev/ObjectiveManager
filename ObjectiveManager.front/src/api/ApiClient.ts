@@ -1,12 +1,15 @@
-﻿import { ObjectivesApi, Configuration } from ".";
+﻿import {ObjectivesApi, Configuration, StatusesApi} from ".";
 
 class Api {
     readonly objectivesApi: ObjectivesApi;
+    readonly statusesApi: StatusesApi;
 
     constructor(
         objectivesApi: ObjectivesApi,
+        statusesApi: StatusesApi
     ) {
         this.objectivesApi = objectivesApi;
+        this.statusesApi = statusesApi;
     }
 }
 
@@ -19,6 +22,7 @@ const configuration = new Configuration ({
 
 ApiClient = new Api(
     new ObjectivesApi(configuration),
+    new StatusesApi(configuration)
 );
-export default ApiClient;
 
+export default ApiClient;

@@ -16,14 +16,11 @@
 import * as runtime from '../runtime';
 import type {
   Objective,
-  ObjectiveStatus,
   ProblemDetails,
 } from '../models/index';
 import {
     ObjectiveFromJSON,
     ObjectiveToJSON,
-    ObjectiveStatusFromJSON,
-    ObjectiveStatusToJSON,
     ProblemDetailsFromJSON,
     ProblemDetailsToJSON,
 } from '../models/index';
@@ -45,7 +42,7 @@ export interface ObjectivesPostRequest {
 export interface ObjectivesPutRequest {
     id?: string;
     definition?: string;
-    status?: ObjectiveStatus;
+    statusId?: number;
     finalDate?: Date;
     comment?: string;
 }
@@ -193,8 +190,8 @@ export class ObjectivesApi extends runtime.BaseAPI {
             queryParameters['Definition'] = requestParameters['definition'];
         }
 
-        if (requestParameters['status'] != null) {
-            queryParameters['Status'] = requestParameters['status'];
+        if (requestParameters['statusId'] != null) {
+            queryParameters['StatusId'] = requestParameters['statusId'];
         }
 
         if (requestParameters['finalDate'] != null) {
