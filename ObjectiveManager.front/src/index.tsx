@@ -1,16 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-
-import { ConfigProvider } from 'antd';
-
-ConfigProvider.config({ theme: {  } });
+import {BrowserRouter} from "react-router-dom";
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+    document.getElementById('root') as HTMLElement
 );
+
 root.render(
-    <ConfigProvider>
-        <App />
-    </ConfigProvider>
+    <BrowserRouter>
+        <App/>
+    </BrowserRouter>
 );

@@ -1,10 +1,15 @@
 ﻿import * as React from "react";
-import {Button, DatePicker, Form, Input, Modal, Select} from "antd";
+import {Button, DatePicker, Form, Input, Modal} from "antd";
 import TextArea from "antd/lib/input/TextArea";
-import {ObjectivesPostRequest} from "../api";
-import ApiClient from "../api/ApiClient";
 import Title from "antd/lib/typography/Title";
-import {useEffect, useState} from "react";
+import dayjs from "dayjs";
+import {InfoCircleOutlined} from "@ant-design/icons";
+import {ApiObjectivesPostRequest} from "../../api";
+import ApiClient from "../../api/ApiClient";
+import ErrorsHandler from "../../utils/ErrorsHandler";
+import {useState} from "react";
+import DateTimeUtils from "../../utils/DateTimeUtils";
+import ErrorInfo from "../ErrorInfo";
 
 interface ICreateObjectiveProps {
     isOpen: boolean;
@@ -12,33 +17,36 @@ interface ICreateObjectiveProps {
 }
 
 interface ICreateObjective {
-    name: string;
+    definition: string;
     finalDate: Date;
     comment: string;
 }
 
 const CreateObjectiveModal: React.FC<ICreateObjectiveProps> = (props) => {
-    const [form] = Form.useForm<ICreateObjective>();
+    const [errorsState, setErrorsState] = useState<string[]>([])
 
     const handleCreateObjective = async (objective: ICreateObjective) => {
         try {
-            const requestData: ObjectivesPostRequest = {
-                definition: objective.name,
+            const requestData: ApiObjectivesPostRequest = {
+                definition: objective.definition,
                 finalDate: objective.finalDate,
                 comment: objective.comment
             }
 
-            await ApiClient.objectivesApi.objectivesPost(requestData);
+            await ApiClient.objectivesApi.apiObjectivesPost(requestData);
             handleCancelModal()
-        } catch (err) {
-            console.error('Найдены ошибки заполнения:', err);
+        } catch (e) {
+            const errors = await ErrorsHandler.getErrorMessages(e as Response);
+            setErrorsState(errors)
         }
     };
-    
+
     const handleCancelModal = () => {
         props.onClose();
         form.resetFields()
     }
+
+    const [form] = Form.useForm<ICreateObjective>();
 
     return (
         <div>
@@ -53,30 +61,38 @@ const CreateObjectiveModal: React.FC<ICreateObjectiveProps> = (props) => {
                 onCancel={handleCancelModal}
                 footer={null}>
                 <Form form={form} layout="vertical"
-                      onFinish={handleCreateObjective}>
+                      onFinish={handleCreateObjective}
+                >
+                    {errorsState && <ErrorInfo errors={errorsState}/>}
                     <Form.Item
-                        name="name"
+                        name="definition"
                         label="Название"
-                        rules={[{required: true, message: 'Пожалуйста, запишите название цели'}]}
+                        rules={[{required: true, message: 'Пожалуйста, придумайте название цели'}]}
                     >
-                        <Input/>
+                        <TextArea autoSize={{minRows: 1, maxRows: 2}} />
                     </Form.Item>
                     <Form.Item
                         name="finalDate"
                         label="Контрольная дата"
+                        tooltip={{
+                            title: 'Чтобы подведение итогов по цели попало в ближайший мониторинг,' +
+                                ' нужно, чтобы дата достижения цели не была больше даты окончания текущего полугодия.',
+                            icon: <InfoCircleOutlined/>
+                        }}
                         rules={[{required: true, message: 'Пожалуйста, выберите крайний срок'}]}
+                        initialValue={dayjs().add(1, 'month')}
                     >
-                        <DatePicker style={{width: '100%'}}/>
+                        <DatePicker format={DateTimeUtils.DateOnlyFormat} style={{width: '100%'}}/>
                     </Form.Item>
                     <Form.Item
                         name="comment"
                         label="Комментарий"
                         rules={[{message: 'Пожалуйста, введите описание цели'}]}
                     >
-                        <TextArea rows={2}/>
+                        <TextArea autoSize={{minRows: 2, maxRows: 8}}/>
                     </Form.Item>
                     <Form.Item style={{textAlign: 'start'}}>
-                        <Button type="default" htmlType="submit">
+                        <Button variant="filled" type="primary" htmlType="submit" size="middle">
                             Создать
                         </Button>
                     </Form.Item>

@@ -1,13 +1,17 @@
-﻿import {ObjectivesApi, Configuration, StatusesApi} from ".";
+﻿import {ObjectivesApi, Configuration, StatusesApi, AccountApi} from ".";
+import AuthService from "../utils/AuthService";
 
 class Api {
+    readonly accountApi: AccountApi;
     readonly objectivesApi: ObjectivesApi;
     readonly statusesApi: StatusesApi;
 
     constructor(
+        accountApi: AccountApi,
         objectivesApi: ObjectivesApi,
         statusesApi: StatusesApi
     ) {
+        this.accountApi = accountApi;
         this.objectivesApi = objectivesApi;
         this.statusesApi = statusesApi;
     }
@@ -15,12 +19,13 @@ class Api {
 
 const basePath = process.env.REACT_APP_BASE_PATH
 
-let ApiClient: Api;
 const configuration = new Configuration ({
-    basePath: basePath
+    basePath: basePath,
+    apiKey: AuthService.getToken()!
 })
 
-ApiClient = new Api(
+const ApiClient = new Api(
+    new AccountApi(configuration),
     new ObjectivesApi(configuration),
     new StatusesApi(configuration)
 );
