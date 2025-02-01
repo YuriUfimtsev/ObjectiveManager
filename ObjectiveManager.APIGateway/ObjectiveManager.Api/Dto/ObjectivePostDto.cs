@@ -1,6 +1,0 @@
-﻿namespace ObjectiveManager.Api.Dto;
-
-public record ObjectivePostDto(
-    string Definition,
-    DateTimeOffset FinalDate,
-    string? Comment);
