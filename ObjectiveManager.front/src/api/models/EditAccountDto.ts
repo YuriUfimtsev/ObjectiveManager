@@ -16,47 +16,47 @@ import { mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface EditDataDto
+ * @interface EditAccountDto
  */
-export interface EditDataDto {
+export interface EditAccountDto {
     /**
      * 
      * @type {string}
-     * @memberof EditDataDto
+     * @memberof EditAccountDto
      */
     name?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof EditDataDto
+     * @memberof EditAccountDto
      */
     surname?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof EditDataDto
+     * @memberof EditAccountDto
      */
     email?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof EditDataDto
+     * @memberof EditAccountDto
      */
     mentorEmail?: string | null;
 }
 
 /**
- * Check if a given object implements the EditDataDto interface.
+ * Check if a given object implements the EditAccountDto interface.
  */
-export function instanceOfEditDataDto(value: object): value is EditDataDto {
+export function instanceOfEditAccountDto(value: object): value is EditAccountDto {
     return true;
 }
 
-export function EditDataDtoFromJSON(json: any): EditDataDto {
-    return EditDataDtoFromJSONTyped(json, false);
+export function EditAccountDtoFromJSON(json: any): EditAccountDto {
+    return EditAccountDtoFromJSONTyped(json, false);
 }
 
-export function EditDataDtoFromJSONTyped(json: any, ignoreDiscriminator: boolean): EditDataDto {
+export function EditAccountDtoFromJSONTyped(json: any, ignoreDiscriminator: boolean): EditAccountDto {
     if (json == null) {
         return json;
     }
@@ -69,11 +69,11 @@ export function EditDataDtoFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function EditDataDtoToJSON(json: any): EditDataDto {
-    return EditDataDtoToJSONTyped(json, false);
+export function EditAccountDtoToJSON(json: any): EditAccountDto {
+    return EditAccountDtoToJSONTyped(json, false);
 }
 
-export function EditDataDtoToJSONTyped(value?: EditDataDto | null, ignoreDiscriminator: boolean = false): any {
+export function EditAccountDtoToJSONTyped(value?: EditAccountDto | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

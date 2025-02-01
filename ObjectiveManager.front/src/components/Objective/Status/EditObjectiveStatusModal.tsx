@@ -5,7 +5,12 @@ import {LoadingOutlined} from "@ant-design/icons";
 import Title from "antd/lib/typography/Title";
 import {Button, Flex, Form, Select} from "antd";
 import TextArea from "antd/lib/input/TextArea";
-import {ApiObjectivesUpdateStatusObjectObjectiveIdPutRequest, StatusObjectDTO, StatusValueDTO} from "../../../api";
+import {
+    ApiObjectivesUpdateStatusObjectObjectiveIdPutRequest,
+    ResponseError,
+    StatusObjectDTO,
+    StatusValueDTO
+} from "../../../api";
 import ErrorsHandler from "../../../utils/ErrorsHandler";
 import ErrorInfo from "../../ErrorInfo";
 
@@ -31,11 +36,11 @@ const EditObjectiveStatusModal: React.FC<IEditObjectiveStatusProps> = (props) =>
             try {
                 const statuses = await ApiClient.statusesApi.apiStatusesAllGet();
                 setAvailableStatuses(statuses);
-            } catch (e) {
-                const errors = await ErrorsHandler.getErrorMessages(e as Response);
-                setErrorsState(errors)
-            } finally {
+                console.log(statuses)
                 setIsLoading(false)
+            } catch (e) {
+                const errors = await ErrorsHandler.getErrorMessages(e as ResponseError);
+                setErrorsState(errors)
             }
         }
 
@@ -57,21 +62,12 @@ const EditObjectiveStatusModal: React.FC<IEditObjectiveStatusProps> = (props) =>
             await ApiClient.objectivesApi.apiObjectivesUpdateStatusObjectObjectiveIdPutRaw(requestData);
             props.onClose()
         } catch (e) {
-            const errors = await ErrorsHandler.getErrorMessages(e as Response);
+            const errors = await ErrorsHandler.getErrorMessages(e as ResponseError);
             setErrorsState(errors)
         }
     };
 
     const [form] = Form.useForm<IEditObjectiveStatus>();
-
-    if (isLoading) {
-        return (
-            <Space style={{marginLeft: 10, marginTop: 10}} size="small" direction="vertical">
-                <p>Загрузка доступных статусов...</p>
-                <Spin indicator={<LoadingOutlined spin/>} size="large"/>
-            </Space>
-        )
-    }
 
     return (
         <div>
@@ -82,33 +78,43 @@ const EditObjectiveStatusModal: React.FC<IEditObjectiveStatusProps> = (props) =>
                         style={{margin: 0, textAlign: 'center'}}>
                         Обновление статуса
                     </Title>}
-                open={props.isOpen} onCancel={props.onClose} footer={null}>
-                <Form form={form} layout="vertical"
-                      onFinish={handleEditStatus}>
-                    {errorsState && <ErrorInfo errors={errorsState}/>}
-                    <Form.Item
-                        name="statusId"
-                        label="Статус"
-                        initialValue={props.currentStatusObject.statusValue?.id ?? null}
-                    >
-                        <Select
-                            options={availableStatuses.map(status => ({label: status.name, value: status.id}))}
-                        />
-                    </Form.Item>
-                    <Form.Item
-                        name="statusComment"
-                        label="Комментарий к изменению статуса"
-                    >
-                        <TextArea autoSize={{minRows: 2, maxRows: 8}}/>
-                    </Form.Item>
-                    <Form.Item>
-                        <Flex gap="small">
-                            <Button variant="filled" type="primary" htmlType="submit" size="middle">
-                                Сохранить
-                            </Button>
-                        </Flex>
-                    </Form.Item>
-                </Form>
+                open={props.isOpen}
+                onCancel={props.onClose}
+                footer={null}
+            >
+                {isLoading ? (
+                    <Space style={{marginLeft: 10, marginTop: 10}} size="small" direction="vertical">
+                        <p>Загрузка доступных статусов...</p>
+                        <Spin indicator={<LoadingOutlined spin/>} size="large"/>
+                    </Space>
+                ) : (
+                    <Form form={form} layout="vertical"
+                          onFinish={handleEditStatus}>
+                        {errorsState && <ErrorInfo errors={errorsState}/>}
+                        <Form.Item
+                            name="statusId"
+                            label="Статус"
+                            initialValue={props.currentStatusObject.statusValue?.id ?? null}
+                        >
+                            <Select
+                                options={availableStatuses.map(status => ({label: status.name, value: status.id}))}
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            name="statusComment"
+                            label="Комментарий к изменению статуса"
+                        >
+                            <TextArea autoSize={{minRows: 2, maxRows: 8}}/>
+                        </Form.Item>
+                        <Form.Item>
+                            <Flex gap="small">
+                                <Button variant="filled" type="primary" htmlType="submit" size="middle">
+                                    Сохранить
+                                </Button>
+                            </Flex>
+                        </Form.Item>
+                    </Form>
+                )}
             </Modal>
         </div>
     )

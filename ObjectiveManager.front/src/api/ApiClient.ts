@@ -21,7 +21,7 @@ const basePath = process.env.REACT_APP_BASE_PATH
 
 const configuration = new Configuration ({
     basePath: basePath,
-    apiKey: AuthService.getToken()!
+    apiKey: `Bearer ${AuthService.getToken()!}`
 })
 
 const ApiClient = new Api(

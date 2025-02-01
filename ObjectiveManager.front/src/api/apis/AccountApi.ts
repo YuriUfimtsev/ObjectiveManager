@@ -16,29 +16,26 @@
 import * as runtime from '../runtime';
 import type {
   AccountData,
-  EditDataDto,
+  EditAccountDto,
   LoginViewModel,
   RegisterDto,
-  Result,
-  TokenCredentialsResult,
+  TokenCredentials,
 } from '../models/index';
 import {
     AccountDataFromJSON,
     AccountDataToJSON,
-    EditDataDtoFromJSON,
-    EditDataDtoToJSON,
+    EditAccountDtoFromJSON,
+    EditAccountDtoToJSON,
     LoginViewModelFromJSON,
     LoginViewModelToJSON,
     RegisterDtoFromJSON,
     RegisterDtoToJSON,
-    ResultFromJSON,
-    ResultToJSON,
-    TokenCredentialsResultFromJSON,
-    TokenCredentialsResultToJSON,
+    TokenCredentialsFromJSON,
+    TokenCredentialsToJSON,
 } from '../models/index';
 
 export interface ApiAccountEditPutRequest {
-    editDataDto?: EditDataDto;
+    editAccountDto?: EditAccountDto;
 }
 
 export interface ApiAccountLoginPostRequest {
@@ -49,10 +46,6 @@ export interface ApiAccountRegisterPostRequest {
     registerDto?: RegisterDto;
 }
 
-export interface ApiAccountUserDataGetRequest {
-    userId?: string;
-}
-
 /**
  * 
  */
@@ -60,7 +53,7 @@ export class AccountApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiAccountEditPutRaw(requestParameters: ApiAccountEditPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Result>> {
+    async apiAccountEditPutRaw(requestParameters: ApiAccountEditPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -76,22 +69,21 @@ export class AccountApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: EditDataDtoToJSON(requestParameters['editDataDto']),
+            body: EditAccountDtoToJSON(requestParameters['editAccountDto']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ResultFromJSON(jsonValue));
+        return new runtime.VoidApiResponse(response);
     }
 
     /**
      */
-    async apiAccountEditPut(requestParameters: ApiAccountEditPutRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Result> {
-        const response = await this.apiAccountEditPutRaw(requestParameters, initOverrides);
-        return await response.value();
+    async apiAccountEditPut(requestParameters: ApiAccountEditPutRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiAccountEditPutRaw(requestParameters, initOverrides);
     }
 
     /**
      */
-    async apiAccountLoginPostRaw(requestParameters: ApiAccountLoginPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TokenCredentialsResult>> {
+    async apiAccountLoginPostRaw(requestParameters: ApiAccountLoginPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TokenCredentials>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -110,47 +102,19 @@ export class AccountApi extends runtime.BaseAPI {
             body: LoginViewModelToJSON(requestParameters['loginViewModel']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => TokenCredentialsResultFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => TokenCredentialsFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiAccountLoginPost(requestParameters: ApiAccountLoginPostRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TokenCredentialsResult> {
+    async apiAccountLoginPost(requestParameters: ApiAccountLoginPostRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TokenCredentials> {
         const response = await this.apiAccountLoginPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async apiAccountRefreshTokenGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TokenCredentialsResult>> {
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // Bearer authentication
-        }
-
-        const response = await this.request({
-            path: `/api/Account/refreshToken`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => TokenCredentialsResultFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async apiAccountRefreshTokenGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TokenCredentialsResult> {
-        const response = await this.apiAccountRefreshTokenGetRaw(initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
-    async apiAccountRegisterPostRaw(requestParameters: ApiAccountRegisterPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TokenCredentialsResult>> {
+    async apiAccountRegisterPostRaw(requestParameters: ApiAccountRegisterPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TokenCredentials>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -169,24 +133,20 @@ export class AccountApi extends runtime.BaseAPI {
             body: RegisterDtoToJSON(requestParameters['registerDto']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => TokenCredentialsResultFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => TokenCredentialsFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiAccountRegisterPost(requestParameters: ApiAccountRegisterPostRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TokenCredentialsResult> {
+    async apiAccountRegisterPost(requestParameters: ApiAccountRegisterPostRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TokenCredentials> {
         const response = await this.apiAccountRegisterPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async apiAccountUserDataGetRaw(requestParameters: ApiAccountUserDataGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AccountData>> {
+    async apiAccountUserDataGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AccountData>> {
         const queryParameters: any = {};
-
-        if (requestParameters['userId'] != null) {
-            queryParameters['userId'] = requestParameters['userId'];
-        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -206,8 +166,8 @@ export class AccountApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiAccountUserDataGet(requestParameters: ApiAccountUserDataGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AccountData> {
-        const response = await this.apiAccountUserDataGetRaw(requestParameters, initOverrides);
+    async apiAccountUserDataGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AccountData> {
+        const response = await this.apiAccountUserDataGetRaw(initOverrides);
         return await response.value();
     }
 

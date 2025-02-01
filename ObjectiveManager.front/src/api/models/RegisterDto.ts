@@ -48,12 +48,6 @@ export interface RegisterDto {
      * @type {string}
      * @memberof RegisterDto
      */
-    passwordConfirm?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof RegisterDto
-     */
     mentorEmail?: string | null;
 }
 
@@ -78,7 +72,6 @@ export function RegisterDtoFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'surname': json['surname'] == null ? undefined : json['surname'],
         'email': json['email'] == null ? undefined : json['email'],
         'password': json['password'] == null ? undefined : json['password'],
-        'passwordConfirm': json['passwordConfirm'] == null ? undefined : json['passwordConfirm'],
         'mentorEmail': json['mentorEmail'] == null ? undefined : json['mentorEmail'],
     };
 }
@@ -98,7 +91,6 @@ export function RegisterDtoToJSONTyped(value?: RegisterDto | null, ignoreDiscrim
         'surname': value['surname'],
         'email': value['email'],
         'password': value['password'],
-        'passwordConfirm': value['passwordConfirm'],
         'mentorEmail': value['mentorEmail'],
     };
 }

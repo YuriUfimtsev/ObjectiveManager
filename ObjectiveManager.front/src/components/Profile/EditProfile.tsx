@@ -1,61 +1,79 @@
 ﻿import {FC, useEffect, useState} from "react";
 import Title from "antd/lib/typography/Title";
 import * as React from "react";
-import {Button, Col, Form, Input, Row, Space} from "antd";
+import {Button, Col, Form, Input, message, Row, Space} from "antd";
 import {LoadingOutlined, UserOutlined} from "@ant-design/icons";
 import {Spin} from "antd/lib";
-import {EditDataDto} from "../../api";
+import {EditAccountDto, ResponseError} from "../../api";
 import ApiClient from "../../api/ApiClient";
 import ErrorsHandler from "../../utils/ErrorsHandler";
 import ValidationUtils from "../../utils/ValidationUtils";
 import {useNavigate} from "react-router-dom";
 import ErrorInfo from "../ErrorInfo";
+import AuthService from "../../utils/AuthService";
+import isEqual from 'lodash.isequal';
 
-const EditProfile: FC<EditDataDto> = () => {
+interface InitialUserDataLoadingState {
+    isDataLoading: boolean;
+    userData: EditAccountDto | undefined;
+}
+
+const EditProfile: FC = () => {
     const [errorsState, setErrorsState] = useState<string[]>([])
-    const [isInitialUserDataLoading, setIsInitialUserDataLoading] = useState<boolean>(true);
+    const [initialUserDataState, setInitialUserDataState] = useState<InitialUserDataLoadingState>({
+        isDataLoading: true,
+        userData: undefined
+    });
 
     const navigate = useNavigate();
 
-    const [form] = Form.useForm<EditDataDto>();
+    const [form] = Form.useForm<EditAccountDto>();
 
     useEffect(() => {
         const getUserInfo = async () => {
             try {
                 const initialUserData = await ApiClient.accountApi.apiAccountUserDataGet()
-                form.setFieldsValue(initialUserData)
+                setInitialUserDataState({
+                    isDataLoading: false,
+                    userData: {
+                        name: initialUserData.name,
+                        surname: initialUserData.surname,
+                        email: initialUserData.email,
+                        mentorEmail: initialUserData.mentorEmail
+                    }
+                })
             } catch (e) {
-                const errors = await ErrorsHandler.getErrorMessages(e as Response);
+                const errors = await ErrorsHandler.getErrorMessages(e as ResponseError);
                 setErrorsState(errors)
-            } finally {
-                setIsInitialUserDataLoading(false)
             }
         }
 
         getUserInfo()
     }, [])
 
-    const handleEditSubmit = async (editedData: EditDataDto) => {
-        if (!editedData.email || !ValidationUtils.isCorrectEmail(editedData.email)) {
+    const handleEditSubmit = async (editedAccountData: EditAccountDto) => {
+        if (isEqual(editedAccountData, initialUserDataState.userData)) {
+            setErrorsState(['Данные не изменились'])
+            return
+        }
+
+        if (!editedAccountData.email || !ValidationUtils.isCorrectEmail(editedAccountData.email)) {
             setErrorsState(['Некорректный адрес электронной почты']);
             return;
         }
 
         try {
-            const result = await ApiClient.accountApi.apiAccountEditPut({editDataDto: editedData})
-            if (result.errors) {
-                setErrorsState(result.errors)
-                return
-            }
-
+            await ApiClient.accountApi.apiAccountEditPut({editAccountDto: editedAccountData})
+            message.success("Успешно", 8)
             navigate("/")
         } catch (e) {
-            const errors = await ErrorsHandler.getErrorMessages(e as Response);
+            console.log(e)
+            const errors = await ErrorsHandler.getErrorMessages(e as ResponseError);
             setErrorsState(errors)
         }
     }
 
-    if (isInitialUserDataLoading) {
+    if (initialUserDataState.isDataLoading) {
         return (
             <Space style={{marginLeft: 10, marginTop: 10}} size="small" direction="vertical">
                 <p>Загрузка данных пользователя...</p>
@@ -86,6 +104,7 @@ const EditProfile: FC<EditDataDto> = () => {
                         layout="vertical"
                         size="large"
                         onFinish={handleEditSubmit}
+                        initialValues={initialUserDataState.userData}
                     >
                         <Row justify="space-between">
                             <Col>
@@ -112,20 +131,36 @@ const EditProfile: FC<EditDataDto> = () => {
                             name="email"
                             rules={[{required: true, message: 'Пожалуйста, введите почту'}]}
                             style={{marginBottom: "12px"}}
+                            label="Почта"
+                            layout="horizontal"
                         >
-                            <Input placeholder="Электронная почта"/>
+                            <Input/>
                         </Form.Item>
                         <Form.Item
                             name="mentorEmail"
                             rules={[{required: true, message: 'Пожалуйста, введите почту наставника'}]}
                             style={{marginBottom: "12px"}}
+                            label="Почта наставника"
+                            layout="horizontal"
                         >
-                            <Input placeholder="Электронная почта наставника"/>
+                            <Input/>
                         </Form.Item>
-                        <Form.Item>
+                        <Form.Item
+                            style={{marginBottom: "12px"}}
+                        >
                             <Button block variant="solid" htmlType="submit"
                                     style={{background: "#00264b", borderColor: "#001529", color: "white"}}>
                                 Сохранить
+                            </Button>
+                        </Form.Item>
+                        <Form.Item>
+                            <Button block variant="solid"
+                                    onClick={() => {
+                                        AuthService.logout()
+                                        window.location.reload()
+                                    }}
+                                    style={{background: "darkred", borderColor: "darkred", color: "white"}}>
+                                Выйти
                             </Button>
                         </Form.Item>
                     </Form>

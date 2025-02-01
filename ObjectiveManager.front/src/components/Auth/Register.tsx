@@ -3,7 +3,7 @@ import {Navigate} from "react-router-dom";
 import Title from "antd/lib/typography/Title";
 import * as React from "react";
 import {Button, Col, Form, Input, Row} from "antd";
-import {RegisterDto} from "../../api";
+import {RegisterDto, ResponseError} from "../../api";
 import ValidationUtils from "../../utils/ValidationUtils";
 import ErrorsHandler from "../../utils/ErrorsHandler";
 import {EyeInvisibleOutlined, EyeTwoTone, LockOutlined, LoginOutlined} from "@ant-design/icons";
@@ -19,7 +19,7 @@ const Register: FC<RegisterProps> = (props) => {
         isLogin: AuthService.isLoggedIn(),
         errors: [],
     })
-    
+
     const handleSubmitRegister = async (registerModel: RegisterDto) => {
         if (!registerModel.email || !ValidationUtils.isCorrectEmail(registerModel.email)) {
             setRegisterState({
@@ -29,18 +29,10 @@ const Register: FC<RegisterProps> = (props) => {
             return;
         }
 
-        try {
-            const result = await AuthService.register(registerModel)
-            setRegisterState(result)
-            if (result.isLogin) {
-                props.onLogin()
-            }
-        } catch (e) {
-            const errors = await ErrorsHandler.getErrorMessages(e as Response);
-            setRegisterState({
-                errors: errors,
-                isLogin: false
-            })
+        const result = await AuthService.register(registerModel)
+        setRegisterState(result)
+        if (result.isLogin) {
+            props.onLogin()
         }
     }
 
@@ -64,7 +56,7 @@ const Register: FC<RegisterProps> = (props) => {
                     </Title>
                 </Col>
             </Row>
-            {registerState.errors && <ErrorInfo errors={registerState.errors} />}
+            {registerState.errors && <ErrorInfo errors={registerState.errors}/>}
             <Row justify="center" style={{marginTop: 20}}>
                 <Col span={8}>
                     <Form
@@ -78,7 +70,7 @@ const Register: FC<RegisterProps> = (props) => {
                                 <Form.Item
                                     name="name"
                                     rules={[{required: true, message: 'Пожалуйста, введите имя'}]}
-                                    style={{ marginBottom: "12px" }}
+                                    style={{marginBottom: "12px"}}
                                 >
                                     <Input placeholder="Имя"/>
                                 </Form.Item>
@@ -88,7 +80,7 @@ const Register: FC<RegisterProps> = (props) => {
                                 <Form.Item
                                     name="surname"
                                     rules={[{required: true, message: 'Пожалуйста, введите фамилию'}]}
-                                    style={{ marginBottom: "12px" }}
+                                    style={{marginBottom: "12px"}}
                                 >
                                     <Input placeholder="Фамилия"/>
                                 </Form.Item>
@@ -97,14 +89,14 @@ const Register: FC<RegisterProps> = (props) => {
                         <Form.Item
                             name="email"
                             rules={[{required: true, message: 'Пожалуйста, введите почту'}]}
-                            style={{ marginBottom: "12px" }}
+                            style={{marginBottom: "12px"}}
                         >
                             <Input placeholder="Электронная почта"/>
                         </Form.Item>
                         <Form.Item
                             name="password"
                             rules={[{required: true, message: 'Пожалуйста, введите пароль'}]}
-                            style={{ marginBottom: "12px" }}
+                            style={{marginBottom: "12px"}}
                         >
                             <Input.Password
                                 prefix={<LockOutlined/>}
@@ -114,7 +106,7 @@ const Register: FC<RegisterProps> = (props) => {
                         <Form.Item
                             name="mentorEmail"
                             rules={[{required: true, message: 'Пожалуйста, введите почту наставника'}]}
-                            style={{ marginBottom: "12px" }}
+                            style={{marginBottom: "12px"}}
                         >
                             <Input placeholder="Электронная почта наставника"/>
                         </Form.Item>

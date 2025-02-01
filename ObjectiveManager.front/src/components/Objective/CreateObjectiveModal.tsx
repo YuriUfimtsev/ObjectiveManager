@@ -4,7 +4,7 @@ import TextArea from "antd/lib/input/TextArea";
 import Title from "antd/lib/typography/Title";
 import dayjs from "dayjs";
 import {InfoCircleOutlined} from "@ant-design/icons";
-import {ApiObjectivesPostRequest} from "../../api";
+import {ApiObjectivesPostRequest, ResponseError} from "../../api";
 import ApiClient from "../../api/ApiClient";
 import ErrorsHandler from "../../utils/ErrorsHandler";
 import {useState} from "react";
@@ -36,7 +36,7 @@ const CreateObjectiveModal: React.FC<ICreateObjectiveProps> = (props) => {
             await ApiClient.objectivesApi.apiObjectivesPost(requestData);
             handleCancelModal()
         } catch (e) {
-            const errors = await ErrorsHandler.getErrorMessages(e as Response);
+            const errors = await ErrorsHandler.getErrorMessages(e as ResponseError);
             setErrorsState(errors)
         }
     };

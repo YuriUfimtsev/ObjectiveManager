@@ -3,7 +3,7 @@ import {Button, DatePicker, Flex, Form, Modal} from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Title from "antd/lib/typography/Title";
 import dayjs from 'dayjs';
-import {ApiObjectivesUpdateInfoObjectiveIdPutRequest, ObjectiveDTO} from "../../api";
+import {ApiObjectivesUpdateInfoObjectiveIdPutRequest, ObjectiveDTO, ResponseError} from "../../api";
 import ApiClient from "../../api/ApiClient";
 import DateTimeUtils from "../../utils/DateTimeUtils";
 import ErrorsHandler from "../../utils/ErrorsHandler";
@@ -43,7 +43,7 @@ const EditObjectiveInfoModal: React.FC<IEditObjectiveInfoProps> = (props) => {
             await ApiClient.objectivesApi.apiObjectivesUpdateInfoObjectiveIdPut(requestData);
             handleCancelModal()
         } catch (e) {
-            const errors = await ErrorsHandler.getErrorMessages(e as Response);
+            const errors = await ErrorsHandler.getErrorMessages(e as ResponseError);
             setErrorsState(errors)
         }
     };

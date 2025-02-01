@@ -16,14 +16,11 @@
 import * as runtime from '../runtime';
 import type {
   ObjectiveDTO,
-  ProblemDetails,
   StatusObjectDTO,
 } from '../models/index';
 import {
     ObjectiveDTOFromJSON,
     ObjectiveDTOToJSON,
-    ProblemDetailsFromJSON,
-    ProblemDetailsToJSON,
     StatusObjectDTOFromJSON,
     StatusObjectDTOToJSON,
 } from '../models/index';

@@ -5,7 +5,7 @@ import {EditOutlined, HistoryOutlined, LoadingOutlined, RetweetOutlined} from "@
 import ApiClient from "../api/ApiClient";
 import DateTimeUtils from "../utils/DateTimeUtils";
 import {Spin} from "antd/lib";
-import {ObjectiveDTO} from "../api";
+import {ObjectiveDTO, ResponseError} from "../api";
 import CreateObjectiveModal from "./Objective/CreateObjectiveModal";
 import DeleteObjectiveModal from "./Objective/DeleteObjectiveModal";
 import EditObjectiveInfoModal from "./Objective/EditObjectiveInfoModal";
@@ -49,17 +49,16 @@ const ObjectivesTable: React.FC = () => {
                 const objectives = await ApiClient.objectivesApi.apiObjectivesAllGet();
                 setObjectives(objectives);
                 setObjectivesAreChanged(false)
+                setIsLoading(false)
             } catch
                 (e) {
-                const errors = await ErrorsHandler.getErrorMessages(e as Response);
-                await ErrorsHandler.showErrorMessage(errors[0])
-            } finally {
-                setIsLoading(false)
+                const errors = await ErrorsHandler.getErrorMessages(e as ResponseError);
+                await ErrorsHandler.showErrorMessage(errors[0], true)
             }
         }
 
         fetchObjectives()
-    }, [areObjectivesChanged]);
+    }, [areObjectivesChanged])
 
     if (isLoading) {
         return (

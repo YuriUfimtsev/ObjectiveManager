@@ -1,7 +1,7 @@
 ﻿import {Modal} from "antd/lib";
 import {DeleteOutlined, ExclamationCircleFilled} from "@ant-design/icons";
 import React from "react";
-import {ObjectiveDTO} from "../../api";
+import {ObjectiveDTO, ResponseError} from "../../api";
 import ApiClient from "../../api/ApiClient";
 import DateTimeUtils from "../../utils/DateTimeUtils";
 import ErrorsHandler from "../../utils/ErrorsHandler";
@@ -19,7 +19,7 @@ const DeleteObjectiveModal: React.FC<IDeleteObjectiveProps> = (props) => {
             await ApiClient.objectivesApi.apiObjectivesObjectiveIdDelete({objectiveId: props.objective?.id!});
             props.onClose()
         } catch (e) {
-            const errors = await ErrorsHandler.getErrorMessages(e as Response);
+            const errors = await ErrorsHandler.getErrorMessages(e as ResponseError);
             await ErrorsHandler.showErrorMessage(errors[0])
         }
     };

@@ -3,7 +3,7 @@ import {Navigate, useSearchParams} from "react-router-dom";
 import Title from "antd/lib/typography/Title";
 import * as React from "react";
 import {Button, Col, Form, Input, Row} from "antd";
-import {LoginViewModel} from "../../api";
+import {LoginViewModel, ResponseError} from "../../api";
 import ValidationUtils from "../../utils/ValidationUtils";
 import ErrorsHandler from "../../utils/ErrorsHandler";
 import {EyeInvisibleOutlined, EyeTwoTone, LockOutlined, LoginOutlined, UserOutlined} from "@ant-design/icons";
@@ -11,13 +11,10 @@ import AuthService, {AuthResult} from "../../utils/AuthService";
 import ErrorInfo from "../ErrorInfo";
 
 interface LoginProps {
-    onLogin: (returnUrl: string | null) => void;
+    onLogin: () => void;
 }
 
 const Login: FC<LoginProps> = (props) => {
-    const [searchParams] = useSearchParams()
-    const returnUrl = searchParams.get("returnUrl")
-
     const [loginState, setLoginState] = useState<AuthResult>({
         isLogin: AuthService.isLoggedIn(),
         errors: []
@@ -32,18 +29,10 @@ const Login: FC<LoginProps> = (props) => {
             return;
         }
 
-        try {
-            const result = await AuthService.login(loginModel)
-            setLoginState(result)
-            if (result.isLogin) {
-                props.onLogin(returnUrl)
-            }
-        } catch (e) {
-            const errors = await ErrorsHandler.getErrorMessages(e as Response);
-            setLoginState({
-                errors: errors,
-                isLogin: false
-            })
+        const result = await AuthService.login(loginModel)
+        setLoginState(result)
+        if (result.isLogin) {
+            props.onLogin()
         }
     }
 
@@ -67,9 +56,9 @@ const Login: FC<LoginProps> = (props) => {
                     </Title>
                 </Col>
             </Row>
-            {loginState.errors && <ErrorInfo errors={loginState.errors} />}
+            {loginState.errors && <ErrorInfo errors={loginState.errors}/>}
             <Row justify="center" style={{marginTop: 20}}>
-                <Col span={7}>
+                <Col span={6}>
                     <Form
                         form={form}
                         layout="vertical"

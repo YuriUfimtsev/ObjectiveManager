@@ -1,7 +1,7 @@
 import './styles/App.css';
 import React, {useState} from 'react';
 import ObjectivesTable from "./components/ObjectivesTable";
-import {Navigate, Route, Routes, useNavigate} from "react-router-dom";
+import {Navigate, Route, Routes} from "react-router-dom";
 import AuthLayout from "./AuthLayout";
 import AppHeader from "./AppHeader";
 import Register from "./components/Auth/Register";
@@ -14,25 +14,16 @@ interface AppState {
 }
 
 const App = () => {
-    const navigate = useNavigate();
     const [state, setState] = useState<AppState>({
         loggedIn: AuthService.isLoggedIn(),
     });
 
-    const login = async (returnUrl: string | null) => {
+    const login = async () => {
         setState({
             loggedIn: true
         })
 
-        return <Navigate to={returnUrl || "/"}/>;
-    };
-
-    const logout = () => {
-        AuthService.logout();
-        setState({
-            loggedIn: false
-        })
-        navigate("/login");
+        return <Navigate to={"/"}/>;
     };
 
     return (
@@ -46,7 +37,7 @@ const App = () => {
                     </Route>
 
                     <Route path="login" element={<Login onLogin={login}/>}/>
-                    <Route path="register" element={<Register onLogin={() => login("")}/>}/>
+                    <Route path="register" element={<Register onLogin={login}/>}/>
                 </Route>
             </Routes>
         </>

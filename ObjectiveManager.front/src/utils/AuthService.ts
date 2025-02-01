@@ -1,9 +1,9 @@
 ﻿import ApiClient from "../api/ApiClient";
 import {jwtDecode} from "jwt-decode";
-import {LoginViewModel, RegisterDto, TokenCredentialsResult} from "../api";
+import {LoginViewModel, RegisterDto, ResponseError} from "../api";
+import ErrorsHandler from "./ErrorsHandler";
 
 interface TokenPayload {
-    _userName: string;
     _id: string;
     "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress": string;
     nbf: number;
@@ -18,15 +18,54 @@ export interface AuthResult {
 
 export default class AuthService {
     public static async login(user: LoginViewModel): Promise<AuthResult> {
-        const tokenCredentialsResult = await ApiClient.accountApi.apiAccountLoginPost({loginViewModel: user});
-        return this.getAuthResult(tokenCredentialsResult);
+        try {
+            const tokenCredentials = await ApiClient.accountApi.apiAccountLoginPost({loginViewModel: user});
+            if (tokenCredentials?.accessToken == undefined) {
+                return {
+                    errors: ['Ошибка аутентификации'],
+                    isLogin: false
+                }
+            }
+
+            this.setToken(tokenCredentials.accessToken)
+            return {
+                errors: [],
+                isLogin: true
+            }
+        } catch (e) {
+            const errors = await ErrorsHandler.getErrorMessages(e as ResponseError);
+            return {
+                errors: errors,
+                isLogin: false
+            }
+        }
     }
 
     public static logout = () => localStorage.clear();
 
+    // todo: унифицировать с методом login
     public static async register(user: RegisterDto): Promise<AuthResult> {
-        const token = await ApiClient.accountApi.apiAccountRegisterPost({registerDto: user})
-        return this.getAuthResult(token);
+        try {
+            const tokenCredentials = await ApiClient.accountApi.apiAccountRegisterPost({registerDto: user})
+            if (tokenCredentials?.accessToken == undefined) {
+                return {
+                    errors: ['Ошибка аутентификации'],
+                    isLogin: false
+                }
+            }
+
+            this.setToken(tokenCredentials.accessToken)
+            return {
+                errors: [],
+                isLogin: true
+            }
+        } catch (e) {
+            const errors = await ErrorsHandler.getErrorMessages(e as ResponseError);
+            return {
+                errors: errors,
+                isLogin: false
+            }
+        }
     }
 
     public static isLoggedIn() {
@@ -54,21 +93,6 @@ export default class AuthService {
     }
 
     public static getToken = () => localStorage.getItem("jwt_token");
-
-    private static getAuthResult(tokenResult: TokenCredentialsResult): AuthResult {
-        if (!tokenResult.succeeded || tokenResult.value?.accessToken == undefined) {
-            return {
-                errors: tokenResult.errors ?? [],
-                isLogin: false
-            }
-        }
-
-        this.setToken(tokenResult.value.accessToken)
-        return {
-            errors: [],
-            isLogin: true
-        }
-    }
     
     private static setToken = (idToken: string) => localStorage.setItem("jwt_token", idToken);
 }

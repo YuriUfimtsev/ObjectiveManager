@@ -31,12 +31,6 @@ export interface LoginViewModel {
      * @memberof LoginViewModel
      */
     password: string | null;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof LoginViewModel
-     */
-    rememberMe: boolean;
 }
 
 /**
@@ -45,7 +39,6 @@ export interface LoginViewModel {
 export function instanceOfLoginViewModel(value: object): value is LoginViewModel {
     if (!('email' in value) || value['email'] === undefined) return false;
     if (!('password' in value) || value['password'] === undefined) return false;
-    if (!('rememberMe' in value) || value['rememberMe'] === undefined) return false;
     return true;
 }
 
@@ -61,7 +54,6 @@ export function LoginViewModelFromJSONTyped(json: any, ignoreDiscriminator: bool
         
         'email': json['email'],
         'password': json['password'],
-        'rememberMe': json['rememberMe'],
     };
 }
 
@@ -78,7 +70,6 @@ export function LoginViewModelToJSONTyped(value?: LoginViewModel | null, ignoreD
         
         'email': value['email'],
         'password': value['password'],
-        'rememberMe': value['rememberMe'],
     };
 }
 
