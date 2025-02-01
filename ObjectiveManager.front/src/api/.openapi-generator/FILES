@@ -4,15 +4,12 @@ apis/StatusesApi.ts
 apis/index.ts
 index.ts
 models/AccountData.ts
-models/EditDataDto.ts
+models/EditAccountDto.ts
 models/LoginViewModel.ts
 models/ObjectiveDTO.ts
-models/ProblemDetails.ts
 models/RegisterDto.ts
-models/Result.ts
 models/StatusObjectDTO.ts
 models/StatusValueDTO.ts
 models/TokenCredentials.ts
-models/TokenCredentialsResult.ts
 models/index.ts
 runtime.ts

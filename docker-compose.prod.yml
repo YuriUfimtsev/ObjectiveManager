@@ -31,12 +31,13 @@ services:
     image: postgres:17.0
     restart: unless-stopped
     environment:
-      POSTGRES_DB: "ObjectiveManagerDB"
       POSTGRES_USER:  ${POSTGRES_USER}
       POSTGRES_PASSWORD:  ${POSTGRES_PASSWORD}
+      POSTGRES_MULTIPLE_DATABASES: "ObjectivesServiceDB", "AuthServiceDB"
       PGPORT: 5433
     volumes:
-      - pgdb-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/postgresData
+      - ./docker-postgresql-multiple-databases:/docker-entrypoint-initdb.d
 
 volumes:
-  pgdb-data:
+  postgres-data:

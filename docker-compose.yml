@@ -1,36 +1,63 @@
 services:
-  objective-manager-front:
+  front:
     build:
       context: ./ObjectiveManager.front
       dockerfile: ./Dockerfile
     depends_on:
-      - objective-manager-api
+      - api_gateway.api
     ports:
       - "3000:3000"
 
-  objective-manager-api:
+  api_gateway.api:
     build:
       context: ./ObjectiveManager.APIGateway
-      dockerfile: ObjectiveManager.Api/Dockerfile
+      dockerfile: APIGateway.Api/Dockerfile
     depends_on:
-      - postgres
+      - objective_service.api
+      - auth_service.api
     environment:
       - ASPNETCORE_URLS=http://+:5000
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - "5000:5000"
 
+  objective_service.api:
+    build:
+      context: ./ObjectiveManager.ObjectivesService
+      dockerfile: ObjectivesService.Api/Dockerfile
+    depends_on:
+      - postgres
+    environment:
+      - ASPNETCORE_URLS=http://+:5002
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5002:5002"
+  
+  auth_service.api:
+    build:
+      context: ./ObjectiveManager.AuthService
+      dockerfile: AuthService.Api/Dockerfile
+    depends_on:
+      - postgres
+      - objective_service.api
+    environment:
+      - ASPNETCORE_URLS=http://+:5001
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5001:5001"
+
   postgres:
     image: postgres:17.0
     restart: unless-stopped
     environment:
-      POSTGRES_DB: "dev_ObjectiveManagerDB"
       POSTGRES_USER:  "dev_user"
       POSTGRES_PASSWORD:  "dev_password"
+      POSTGRES_MULTIPLE_DATABASES: "dev_ObjectivesServiceDB, dev_AuthServiceDB"
     ports:
       - "5433:5432"
     volumes:
-      - pgdb-data:/var/lib/postgresql/dev_data
+      - pg_data:/var/lib/postgresql/development_data
+      - ./docker-postgresql-multiple-databases:/docker-entrypoint-initdb.d
 
 volumes:
-  pgdb-data:
+  pg_data:
