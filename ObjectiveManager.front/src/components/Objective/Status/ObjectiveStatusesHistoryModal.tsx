@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import ApiClient from "../../../api/ApiClient";
 import {LoadingOutlined} from "@ant-design/icons";
 import DateTimeUtils from "../../../utils/DateTimeUtils";
-import {StatusObjectDTO} from "../../../api";
+import {ResponseError, StatusObjectDTO} from "../../../api";
 import ErrorsHandler from "../../../utils/ErrorsHandler";
 import ErrorInfo from "../../ErrorInfo";
 
@@ -28,7 +28,7 @@ const ObjectiveStatusesHistoryModal: React.FC<IStatusesHistoryProps> = (props) =
                 );
                 setHistory(fetchedHistory)
             } catch (e) {
-                const errors = await ErrorsHandler.getErrorMessages(e as Response);
+                const errors = await ErrorsHandler.getErrorMessages(e as ResponseError);
                 setErrorsState(errors)
             } finally {
                 setIsLoading(false)
