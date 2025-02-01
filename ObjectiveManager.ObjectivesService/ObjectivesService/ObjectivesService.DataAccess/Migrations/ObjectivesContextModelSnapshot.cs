@@ -2,38 +2,37 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using ObjectiveManager.DataAccess.Models;
+using ObjectivesService.DataAccess.Models;
 
 #nullable disable
 
-namespace ObjectiveManager.DataAccess.Migrations
+namespace ObjectivesService.DataAccess.Migrations
 {
     [DbContext(typeof(ObjectivesContext))]
-    [Migration("20250113185650_AddObjectiveTables")]
-    partial class AddObjectiveTables
+    partial class ObjectivesContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("ProductVersion", "9.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("ObjectiveManager.Domain.Entities.ObjectiveEntity", b =>
+            modelBuilder.Entity("ObjectivesService.Domain.Entities.ObjectiveEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Comment")
-                        .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Definition")
                         .IsRequired()
@@ -42,17 +41,46 @@ namespace ObjectiveManager.DataAccess.Migrations
                     b.Property<DateTimeOffset>("FinalDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("StatusId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("StatusObjectId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StatusId");
+                    b.HasIndex("StatusObjectId");
 
                     b.ToTable("Objectives");
                 });
 
-            modelBuilder.Entity("ObjectiveManager.Domain.Entities.ObjectiveStatusEntity", b =>
+            modelBuilder.Entity("ObjectivesService.Domain.Entities.StatusObjectEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("ObjectiveId")
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("StatusValueId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StatusValueId");
+
+                    b.ToTable("StatusObjects");
+                });
+
+            modelBuilder.Entity("ObjectivesService.Domain.Entities.StatusValueEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -66,7 +94,7 @@ namespace ObjectiveManager.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ObjectiveStatuses");
+                    b.ToTable("StatusValues");
 
                     b.HasData(
                         new
@@ -91,15 +119,24 @@ namespace ObjectiveManager.DataAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ObjectiveManager.Domain.Entities.ObjectiveEntity", b =>
+            modelBuilder.Entity("ObjectivesService.Domain.Entities.ObjectiveEntity", b =>
                 {
-                    b.HasOne("ObjectiveManager.Domain.Entities.ObjectiveStatusEntity", "Status")
+                    b.HasOne("ObjectivesService.Domain.Entities.StatusObjectEntity", "StatusObject")
                         .WithMany()
-                        .HasForeignKey("StatusId")
+                        .HasForeignKey("StatusObjectId");
+
+                    b.Navigation("StatusObject");
+                });
+
+            modelBuilder.Entity("ObjectivesService.Domain.Entities.StatusObjectEntity", b =>
+                {
+                    b.HasOne("ObjectivesService.Domain.Entities.StatusValueEntity", "StatusValue")
+                        .WithMany()
+                        .HasForeignKey("StatusValueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Status");
+                    b.Navigation("StatusValue");
                 });
 #pragma warning restore 612, 618
         }

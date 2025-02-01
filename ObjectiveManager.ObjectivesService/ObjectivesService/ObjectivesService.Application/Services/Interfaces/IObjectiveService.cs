@@ -1,0 +1,21 @@
+﻿using ObjectiveManager.Models.ObjectivesService.DTO;
+using ObjectiveManager.Models.Result;
+using ObjectivesService.Application.Models.Dto;
+using ObjectivesService.Domain.DTO;
+
+namespace ObjectivesService.Application.Services.Interfaces;
+
+public interface IObjectiveService
+{
+    public Task<Guid> CreateWithStatus(CreateObjectiveDto newObjective);
+    
+    public Task<Result<ObjectiveDTO>> Get(Guid id);
+    
+    public Task<List<ObjectiveDTO>> GetAll();
+    
+    public Task<Result> Update(UpdateObjectiveDTO updatedObjective);
+
+    public Task<Result> UpdateStatusObject(UpdateStatusObjectDTO updateStatusObjectDto);
+    
+    public Task<Result> Delete(Guid id);
+}
