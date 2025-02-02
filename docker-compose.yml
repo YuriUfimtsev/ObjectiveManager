@@ -21,18 +21,6 @@ services:
     ports:
       - "5000:5000"
 
-  objective_service.api:
-    build:
-      context: ./ObjectiveManager.ObjectivesService
-      dockerfile: ObjectivesService.Api/Dockerfile
-    depends_on:
-      - postgres
-    environment:
-      - ASPNETCORE_URLS=http://+:5002
-      - ASPNETCORE_ENVIRONMENT=Development
-    ports:
-      - "5002:5002"
-  
   auth_service.api:
     build:
       context: ./ObjectiveManager.AuthService
@@ -46,13 +34,37 @@ services:
     ports:
       - "5001:5001"
 
+  objective_service.api:
+    build:
+      context: ./ObjectiveManager.ObjectivesService
+      dockerfile: ObjectivesService.Api/Dockerfile
+    depends_on:
+      - postgres
+    environment:
+      - ASPNETCORE_URLS=http://+:5002
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5002:5002"
+  
+  notifications_service.api:
+    build:
+      context: ./ObjectiveManager.NotificationsService
+      dockerfile: NotificationsService.Api/Dockerfile
+    depends_on:
+      - postgres
+    environment:
+      - ASPNETCORE_URLS=http://+:5003
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5003:5003"
+
   postgres:
     image: postgres:17.0
     restart: unless-stopped
     environment:
       POSTGRES_USER:  "dev_user"
       POSTGRES_PASSWORD:  "dev_password"
-      POSTGRES_MULTIPLE_DATABASES: "dev_ObjectivesServiceDB, dev_AuthServiceDB"
+      POSTGRES_MULTIPLE_DATABASES: "dev_ObjectivesServiceDB, dev_AuthServiceDB, dev_NotificationsServiceDB"
     ports:
       - "5433:5432"
     volumes:

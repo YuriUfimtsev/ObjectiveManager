@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ObjectivesService.Application.Models.Dto;
+using ObjectivesService.Application.Dto;
 using ObjectivesService.Domain.Entities;
 using ObjectivesService.Domain.Interfaces;
 
