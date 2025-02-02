@@ -1,7 +1,6 @@
 ﻿using System.Linq.Expressions;
-using ObjectivesService.Domain.Entities;
 
-namespace ObjectivesService.Domain.Interfaces;
+namespace ObjectiveManager.Models.EntityFramework;
 
 public interface ICrudRepository<TKey, TEntity> : IReadOnlyRepository<TKey, TEntity>
     where TKey : IEquatable<TKey>

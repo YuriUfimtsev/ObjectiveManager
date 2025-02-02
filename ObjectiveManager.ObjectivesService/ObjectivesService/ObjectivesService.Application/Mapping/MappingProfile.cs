@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using ObjectiveManager.Models.ObjectivesService.DTO;
-using ObjectivesService.Application.Models.Dto;
+using ObjectivesService.Application.Dto;
 using ObjectivesService.Domain.Entities;
 
 namespace ObjectivesService.Application.Mapping;

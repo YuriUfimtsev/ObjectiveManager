@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using ObjectiveManager.Models.ObjectivesService.DTO;
 using ObjectiveManager.Models.Result;
-using ObjectivesService.Application.Models.Dto;
+using ObjectivesService.Application.Dto;
 using ObjectivesService.Application.Services.Interfaces;
 using ObjectivesService.DataAccess.Models;
 using ObjectivesService.Domain.DTO;

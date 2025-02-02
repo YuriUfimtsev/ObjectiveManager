@@ -1,10 +1,8 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using ObjectivesService.Domain.Entities;
-using ObjectivesService.Domain.Interfaces;
 using Z.EntityFramework.Plus;
 
-namespace ObjectivesService.DataAccess.Repositories;
+namespace ObjectiveManager.Models.EntityFramework;
 
 public class CrudRepository<TKey, TEntity> : ReadOnlyRepository<TKey, TEntity>, ICrudRepository<TKey, TEntity>
     where TKey : IEquatable<TKey>

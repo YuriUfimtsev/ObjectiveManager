@@ -1,4 +1,4 @@
-﻿namespace ObjectivesService.Domain.Entities;
+﻿namespace ObjectiveManager.Models.EntityFramework;
 
 public interface IEntity<TKey>
     where TKey : IEquatable<TKey>

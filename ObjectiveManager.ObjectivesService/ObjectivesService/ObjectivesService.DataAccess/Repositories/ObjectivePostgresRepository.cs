@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ObjectiveManager.Models.EntityFramework;
 using ObjectivesService.DataAccess.Models;
 using ObjectivesService.Domain.DTO;
 using ObjectivesService.Domain.Entities;

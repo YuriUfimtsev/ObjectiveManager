@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ObjectivesService.DataAccess.Infrastructure;
+using ObjectiveManager.Models.EntityFramework.Infrastructure;
 using ObjectivesService.Domain.Entities;
 
 namespace ObjectivesService.DataAccess.Models;

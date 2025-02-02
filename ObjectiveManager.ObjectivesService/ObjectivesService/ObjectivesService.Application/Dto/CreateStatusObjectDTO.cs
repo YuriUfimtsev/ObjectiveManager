@@ -1,6 +1,7 @@
-﻿namespace ObjectivesService.Application.Models.Dto;
+﻿namespace ObjectivesService.Application.Dto;
 
 public record CreateStatusObjectDTO(
     Guid ObjectiveId,
     long StatusValueId,
-    string? Comment);
+    string? Comment
+);

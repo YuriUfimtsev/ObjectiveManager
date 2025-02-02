@@ -3,7 +3,7 @@ using ObjectiveManager.Models.ObjectivesService.DTO;
 using ObjectiveManager.Models.Result;
 using ObjectiveManager.Utils.Http;
 using ObjectivesService.Api.Filters;
-using ObjectivesService.Application.Models.Dto;
+using ObjectivesService.Application.Dto;
 using ObjectivesService.Application.Services.Interfaces;
 using ObjectivesService.Domain.DTO;
 

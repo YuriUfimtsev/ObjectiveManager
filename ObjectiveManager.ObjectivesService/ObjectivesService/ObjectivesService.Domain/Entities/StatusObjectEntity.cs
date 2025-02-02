@@ -1,4 +1,6 @@
-﻿namespace ObjectivesService.Domain.Entities;
+﻿using ObjectiveManager.Models.EntityFramework;
+
+namespace ObjectivesService.Domain.Entities;
 
 public record StatusObjectEntity : IEntity<Guid>
 { 

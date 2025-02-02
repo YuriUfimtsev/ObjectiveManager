@@ -10,7 +10,7 @@ namespace APIGateway.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AccountController : AggregationController
+public class AccountController : ControllerBase
 {
     private readonly IAuthServiceClient _authServiceClient;
 

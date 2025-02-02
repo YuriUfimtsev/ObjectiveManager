@@ -1,4 +1,5 @@
-﻿using ObjectivesService.DataAccess.Models;
+﻿using ObjectiveManager.Models.EntityFramework;
+using ObjectivesService.DataAccess.Models;
 using ObjectivesService.Domain.Entities;
 using ObjectivesService.Domain.Interfaces;
 

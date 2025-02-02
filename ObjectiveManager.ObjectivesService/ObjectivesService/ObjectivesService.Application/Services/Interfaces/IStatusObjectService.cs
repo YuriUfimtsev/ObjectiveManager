@@ -1,5 +1,5 @@
 ﻿using ObjectiveManager.Models.ObjectivesService.DTO;
-using ObjectivesService.Application.Models.Dto;
+using ObjectivesService.Application.Dto;
 
 namespace ObjectivesService.Application.Services.Interfaces;
 

@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ObjectivesService.DataAccess.Infrastructure;
+using ObjectiveManager.Models.EntityFramework.Infrastructure;
 using ObjectivesService.DataAccess.Models;
 using ObjectivesService.DataAccess.Repositories;
 using ObjectivesService.Domain.Interfaces;
+using IDateTimeProvider = ObjectiveManager.Models.EntityFramework.Infrastructure.IDateTimeProvider;
 
 namespace ObjectivesService.DataAccess.Extensions;
 

@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using ObjectiveManager.Models.ObjectivesService.DTO;
 using ObjectivesService.Client;
 
@@ -9,7 +10,7 @@ namespace APIGateway.Api.Controllers;
 [Authorize]
 [ApiController]
 [Route("api/[controller]")]
-public class ObjectivesController : AggregationController
+public class ObjectivesController : ControllerBase
 {
     private readonly IObjectivesServiceClient _objectivesServiceClient;
 

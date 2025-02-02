@@ -1,6 +1,6 @@
 ﻿using ObjectiveManager.Models.ObjectivesService.DTO;
 using ObjectiveManager.Models.Result;
-using ObjectivesService.Application.Models.Dto;
+using ObjectivesService.Application.Dto;
 using ObjectivesService.Domain.DTO;
 
 namespace ObjectivesService.Application.Services.Interfaces;

@@ -1,9 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using ObjectivesService.Domain.Entities;
-using ObjectivesService.Domain.Interfaces;
 
-namespace ObjectivesService.DataAccess.Repositories;
+namespace ObjectiveManager.Models.EntityFramework;
 
 public class ReadOnlyRepository<TKey, TEntity> : IReadOnlyRepository<TKey, TEntity>
     where TKey : IEquatable<TKey>
