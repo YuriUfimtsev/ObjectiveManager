@@ -2,6 +2,7 @@
 using ObjectiveManager.Models.ObjectivesService.DTO;
 using ObjectiveManager.Models.Result;
 using ObjectiveManager.Utils.Http;
+using ObjectivesService.Api.Filters;
 using ObjectivesService.Application.Models.Dto;
 using ObjectivesService.Application.Services.Interfaces;
 using ObjectivesService.Domain.DTO;
@@ -24,6 +25,7 @@ public class ObjectivesController : ControllerBase
     }
 
     [HttpGet("{objectiveId}")]
+    [ServiceFilter<ObjectiveCreatorOnlyAttribute>]
     [ProducesResponseType(typeof(Result<ObjectiveDTO>), StatusCodes.Status200OK)]
     public async Task<IActionResult> Get([FromRoute] Guid objectiveId)
     {
@@ -32,6 +34,7 @@ public class ObjectivesController : ControllerBase
     }
 
     [HttpGet("statusHistory/{objectiveId}")]
+    [ServiceFilter<ObjectiveCreatorOnlyAttribute>]
     [ProducesResponseType(typeof(StatusObjectDTO[]), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetHistory([FromRoute] Guid objectiveId)
     {
@@ -43,7 +46,8 @@ public class ObjectivesController : ControllerBase
     [ProducesResponseType(typeof(ObjectiveDTO[]), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll()
     {
-        var objectives = await _objectiveService.GetAll();
+        var userId = Request.GetUserIdFromHeader();
+        var objectives = await _objectiveService.GetAllForUser(userId);
         return Ok(objectives);
     }
 
@@ -64,6 +68,7 @@ public class ObjectivesController : ControllerBase
     }
 
     [HttpPut("updateInfo/{objectiveId}")]
+    [ServiceFilter<ObjectiveCreatorOnlyAttribute>]
     [ProducesResponseType(typeof(Result), StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateInfo([FromRoute] Guid objectiveId,
         [FromBody] ObjectivePutDto objectivePutDto)
@@ -80,6 +85,7 @@ public class ObjectivesController : ControllerBase
     }
 
     [HttpPut("updateStatusObject/{objectiveId}")]
+    [ServiceFilter<ObjectiveCreatorOnlyAttribute>]
     [ProducesResponseType(typeof(Result), StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateStatus([FromRoute] Guid objectiveId,
         [FromBody] StatusObjectPutDTO updateObjectDto)
@@ -101,6 +107,7 @@ public class ObjectivesController : ControllerBase
     }
 
     [HttpDelete("{objectiveId}")]
+    [ServiceFilter<ObjectiveCreatorOnlyAttribute>]
     [ProducesResponseType(typeof(Result), StatusCodes.Status200OK)]
     public async Task<IActionResult> Delete([FromRoute] Guid objectiveId)
     {

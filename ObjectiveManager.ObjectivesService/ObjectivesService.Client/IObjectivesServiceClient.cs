@@ -11,6 +11,6 @@ public interface IObjectivesServiceClient
     public Task<Result> DeleteObjective(string objectiveId);
     public Task<Result> UpdateObjectiveInfo(string objectiveId, ObjectivePutDto objectivePutDto);
     public Task<Result> UpdateObjectiveStatus(string objectiveId, StatusObjectPutDTO updateObjectDto);
-    public Task<StatusObjectDTO[]> GetStatusesHistory(string objectiveId);
+    public Task<Result<StatusObjectDTO[]>> GetStatusesHistory(string objectiveId);
     public Task<StatusValueDTO[]> GetAllStatuses();
 }

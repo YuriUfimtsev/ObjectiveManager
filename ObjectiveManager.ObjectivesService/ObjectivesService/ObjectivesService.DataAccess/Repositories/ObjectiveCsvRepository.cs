@@ -45,7 +45,7 @@ public class ObjectiveCsvRepository : IObjectiveRepository
         }
     }
 
-    public Task<List<ObjectiveEntity>> GetAll()
+    public Task<List<ObjectiveEntity>> GetAllForUser(string userId)
         => Task.FromResult(FetchObjectivesThreadSafe());
 
     // TODO: implement

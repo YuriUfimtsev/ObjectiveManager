@@ -22,9 +22,10 @@ public class ObjectivePostgresRepository : CrudRepository<Guid, ObjectiveEntity>
             .Include(obj => obj.StatusObject.StatusValue)
             .FirstOrDefaultAsync(obj => obj.Id == id);
 
-    public new async Task<List<ObjectiveEntity>> GetAll()
+    public async Task<List<ObjectiveEntity>> GetAllForUser(string userId)
         => await Context.Set<ObjectiveEntity>()
             .Include(obj => obj.StatusObject.StatusValue)
+            .Where(obj => obj.UserId == userId)
             .ToListAsync();
 
     public async Task<int> Update(UpdateObjectiveDTO updatedObjective)

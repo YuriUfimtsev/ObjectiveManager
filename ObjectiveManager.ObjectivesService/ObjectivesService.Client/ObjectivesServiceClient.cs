@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Net;
+using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -29,6 +30,8 @@ public class ObjectivesServiceClient : IObjectivesServiceClient
             HttpMethod.Get,
             _objectivesServiceUri + "api/Objectives/all");
 
+        httpRequest.AddUserIdToHeader(_httpContextAccessor);
+
         var response = await _httpClient.SendAsync(httpRequest);
         return await response.DeserializeAsync<ObjectiveDTO[]>();
     }
@@ -40,7 +43,12 @@ public class ObjectivesServiceClient : IObjectivesServiceClient
             _objectivesServiceUri + $"api/Objectives/{objectiveId}");
 
         var response = await _httpClient.SendAsync(httpRequest);
-        return await response.DeserializeAsync<Result<ObjectiveDTO>>();
+        return response.StatusCode switch
+        {
+            HttpStatusCode.Forbidden => Result<ObjectiveDTO>.Failed(await response.Content.ReadAsStringAsync()),
+            HttpStatusCode.OK => await response.DeserializeAsync<Result<ObjectiveDTO>>(),
+            _ => Result<ObjectiveDTO>.Failed(),
+        };
     }
 
     public async Task<string> CreateObjective(ObjectivePostDto objective)
@@ -68,7 +76,12 @@ public class ObjectivesServiceClient : IObjectivesServiceClient
         httpRequest.AddUserIdToHeader(_httpContextAccessor);
 
         var response = await _httpClient.SendAsync(httpRequest);
-        return await response.DeserializeAsync<Result>();
+        return response.StatusCode switch
+        {
+            HttpStatusCode.Forbidden => Result.Failed(await response.Content.ReadAsStringAsync()),
+            HttpStatusCode.OK => await response.DeserializeAsync<Result>(),
+            _ => Result.Failed(),
+        };
     }
     
     public async Task<Result> UpdateObjectiveInfo(string objectiveId, ObjectivePutDto objectivePutDto)
@@ -84,7 +97,12 @@ public class ObjectivesServiceClient : IObjectivesServiceClient
         httpRequest.AddUserIdToHeader(_httpContextAccessor);
         
         var response = await _httpClient.SendAsync(httpRequest);
-        return await response.DeserializeAsync<Result>();
+        return response.StatusCode switch
+        {
+            HttpStatusCode.Forbidden => Result.Failed(await response.Content.ReadAsStringAsync()),
+            HttpStatusCode.OK => await response.DeserializeAsync<Result>(),
+            _ => Result.Failed(),
+        };
     }
 
     public async Task<Result> UpdateObjectiveStatus(string objectiveId, StatusObjectPutDTO updateObjectDto)
@@ -100,17 +118,27 @@ public class ObjectivesServiceClient : IObjectivesServiceClient
         httpRequest.AddUserIdToHeader(_httpContextAccessor);
         
         var response = await _httpClient.SendAsync(httpRequest);
-        return await response.DeserializeAsync<Result>();
+        return response.StatusCode switch
+        {
+            HttpStatusCode.Forbidden => Result.Failed(await response.Content.ReadAsStringAsync()),
+            HttpStatusCode.OK => await response.DeserializeAsync<Result>(),
+            _ => Result.Failed(),
+        };
     }
     
-    public async Task<StatusObjectDTO[]> GetStatusesHistory(string objectiveId)
+    public async Task<Result<StatusObjectDTO[]>> GetStatusesHistory(string objectiveId)
     {
         using var httpRequest = new HttpRequestMessage(
             HttpMethod.Get,
             _objectivesServiceUri + $"api/Objectives/statusHistory/{objectiveId}");
 
         var response = await _httpClient.SendAsync(httpRequest);
-        return await response.DeserializeAsync<StatusObjectDTO[]>();
+        return response.StatusCode switch
+        {
+            HttpStatusCode.Forbidden => Result<StatusObjectDTO[]>.Failed(await response.Content.ReadAsStringAsync()),
+            HttpStatusCode.OK => Result<StatusObjectDTO[]>.Success(await response.DeserializeAsync<StatusObjectDTO[]>()),
+            _ => Result<StatusObjectDTO[]>.Failed(),
+        };
     }
 
     public async Task<StatusValueDTO[]> GetAllStatuses()

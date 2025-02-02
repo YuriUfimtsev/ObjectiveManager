@@ -33,8 +33,10 @@ public class ObjectivesController : AggregationController
     [ProducesResponseType(typeof(StatusObjectDTO[]), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetHistory([FromRoute] string objectiveId)
     {
-        var statusObjects = await _objectivesServiceClient.GetStatusesHistory(objectiveId);
-        return Ok(statusObjects);
+        var statusObjectsResult = await _objectivesServiceClient.GetStatusesHistory(objectiveId);
+        return statusObjectsResult.Succeeded
+            ? Ok(statusObjectsResult.Value)
+            : NotFound(statusObjectsResult.Errors);
     }
 
     [HttpGet("all")]

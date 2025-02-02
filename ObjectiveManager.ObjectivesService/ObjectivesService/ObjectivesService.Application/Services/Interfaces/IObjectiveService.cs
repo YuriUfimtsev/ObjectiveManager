@@ -11,7 +11,9 @@ public interface IObjectiveService
     
     public Task<Result<ObjectiveDTO>> Get(Guid id);
     
-    public Task<List<ObjectiveDTO>> GetAll();
+    public Task<Result<string>> GetCreatorId(Guid objectiveId);
+    
+    public Task<List<ObjectiveDTO>> GetAllForUser(string userId);
     
     public Task<Result> Update(UpdateObjectiveDTO updatedObjective);
 

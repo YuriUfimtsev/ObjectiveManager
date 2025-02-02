@@ -66,9 +66,20 @@ public class ObjectiveService : IObjectiveService
         return Result<ObjectiveDTO>.Success(objective);
     }
 
-    public async Task<List<ObjectiveDTO>> GetAll()
+    public async Task<Result<string>> GetCreatorId(Guid objectiveId)
     {
-        var objectiveEntities = await _objectiveRepository.GetAll();
+        var objectiveEntity = await _objectiveRepository.Get(objectiveId);
+        if (objectiveEntity == null)
+        {
+            return Result<string>.Failed($"Цель с идентификатором {objectiveId} не найдена");
+        }
+
+        return Result<string>.Success(objectiveEntity.UserId);
+    }
+
+    public async Task<List<ObjectiveDTO>> GetAllForUser(string userId)
+    {
+        var objectiveEntities = await _objectiveRepository.GetAllForUser(userId);
         var objectives = _mapper.Map<List<ObjectiveDTO>>(objectiveEntities);
         return objectives;
     }

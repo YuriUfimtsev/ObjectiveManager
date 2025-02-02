@@ -20,7 +20,7 @@ const Login: FC<LoginProps> = (props) => {
         errors: []
     })
 
-    const handleSubmitRegister = async (loginModel: LoginViewModel) => {
+    const handleSubmitLogin = async (loginModel: LoginViewModel) => {
         if (!loginModel.email || !ValidationUtils.isCorrectEmail(loginModel.email)) {
             setLoginState({
                 isLogin: false,
@@ -63,7 +63,7 @@ const Login: FC<LoginProps> = (props) => {
                         form={form}
                         layout="vertical"
                         size="large"
-                        onFinish={handleSubmitRegister}
+                        onFinish={handleSubmitLogin}
                     >
                         <Form.Item
                             name="email"
