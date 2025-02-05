@@ -15,6 +15,6 @@ public class AuthenticationKey
             throw new InvalidOperationException("Security key not found.");
         }
         
-        return new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key));
+        return new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
     }
 }

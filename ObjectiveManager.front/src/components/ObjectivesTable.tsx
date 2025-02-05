@@ -92,6 +92,7 @@ const ObjectivesTable: React.FC = () => {
                     dataIndex="definition"
                     key="definition"
                     filterSearch={true}
+                    width={200}
                 />
                 <Column
                     title={
@@ -132,6 +133,7 @@ const ObjectivesTable: React.FC = () => {
                             )}
                         </Space>
                     }
+                    width={200}
                 />
                 <Column
                     title="Контрольная дата"

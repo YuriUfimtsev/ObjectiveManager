@@ -5,70 +5,97 @@ services:
       dockerfile: ./Dockerfile
     depends_on:
       - api_gateway.api
+    environment:
+      - REACT_APP_BASE_PATH=http://localhost:8080
     ports:
       - "3000:3000"
 
   api_gateway.api:
     build:
-      context: ./ObjectiveManager.APIGateway
-      dockerfile: APIGateway.Api/Dockerfile
+      context: .
+      dockerfile: ./ObjectiveManager.APIGateway/APIGateway.Api/Dockerfile
     depends_on:
       - objective_service.api
       - auth_service.api
+      - notifications_service.api
     environment:
-      - ASPNETCORE_URLS=http://+:5000
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_ENVIRONMENT=Production
+      - Services:Notifications=http://notifications_service.api
+      - Services:Objectives=http://objective_service.api
+      - Services:Auth=http://auth_service.api
+      - AppSecurityKey=${AppSecurityKey}
     ports:
-      - "5000:5000"
-
+      - "8080:80"
+    
+    # todo: отредактировать, сейчас требуется токен (или реализовать ping-эндпоинт)
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://api_gateway.api:80/api/Objectives/all" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  
+  
   auth_service.api:
     build:
-      context: ./ObjectiveManager.AuthService
-      dockerfile: AuthService.Api/Dockerfile
+      context: .
+      dockerfile: ./ObjectiveManager.AuthService/AuthService.Api/Dockerfile
     depends_on:
       - postgres
       - objective_service.api
     environment:
-      - ASPNETCORE_URLS=http://+:5001
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings:AuthServiceDB=Host=postgres;Port=5432;Database=dev_authservicedb;Username=${POSTGRES_DEV_USER};Password=${POSTGRES_DEV_PASSWORD};
+      - Services:Notifications=http://notifications_service.api
+      - Services:Objectives=http://objective_service.api
+      - AppSecurityKey=${AppSecurityKey}
     ports:
-      - "5001:5001"
+      - "80"
 
   objective_service.api:
     build:
-      context: ./ObjectiveManager.ObjectivesService
-      dockerfile: ObjectivesService.Api/Dockerfile
+      context: .
+      dockerfile: ./ObjectiveManager.ObjectivesService/ObjectivesService.Api/Dockerfile
     depends_on:
       - postgres
     environment:
-      - ASPNETCORE_URLS=http://+:5002
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings:ObjectivesServiceDB=Host=postgres;Port=5432;Database=dev_objectivesservicedb;Username=${POSTGRES_DEV_USER};Password=${POSTGRES_DEV_PASSWORD};
+      - Services:Notifications=http://notifications_service.api
+      - Services:Auth=http://auth_service.api
+      - AppSecurityKey=${AppSecurityKey}
     ports:
-      - "5002:5002"
+      - "80"
   
   notifications_service.api:
     build:
-      context: ./ObjectiveManager.NotificationsService
-      dockerfile: NotificationsService.Api/Dockerfile
+      context: .
+      dockerfile: ./ObjectiveManager.NotificationsService/NotificationsService.Api/Dockerfile
     depends_on:
       - postgres
       - objective_service.api
       - auth_service.api
     environment:
-      - ASPNETCORE_URLS=http://+:5003
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings:NotificationsServiceDB=Host=postgres;Port=5432;Database=dev_notificationsservicedb;Username=${POSTGRES_DEV_USER};Password=${POSTGRES_DEV_PASSWORD};
+      - Services:Auth=http://auth_service.api
+      - Services:Objectives=http://objective_service.api
+      - AppSecurityKey=${AppSecurityKey}
     ports:
-      - "5003:5003"
+      - "80"
+      - "25"
 
   postgres:
     image: postgres:17.0
     restart: unless-stopped
     environment:
-      POSTGRES_USER:  "dev_user"
-      POSTGRES_PASSWORD:  "dev_password"
+      POSTGRES_USER:  ${POSTGRES_DEV_USER}
+      POSTGRES_PASSWORD:  ${POSTGRES_DEV_PASSWORD}
       POSTGRES_MULTIPLE_DATABASES: "dev_ObjectivesServiceDB, dev_AuthServiceDB, dev_NotificationsServiceDB"
-    ports:
-      - "5433:5432"
+      PGPORT: 5432
     volumes:
       - pg_data:/var/lib/postgresql/data
       - ./docker-postgresql-multiple-databases:/docker-entrypoint-initdb.d

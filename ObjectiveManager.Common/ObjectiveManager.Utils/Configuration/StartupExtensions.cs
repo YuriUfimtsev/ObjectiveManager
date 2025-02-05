@@ -1,5 +1,4 @@
 ﻿using dotenv.net;
-using dotenv.net.Utilities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -76,11 +75,12 @@ public static class StartupExtensions
                     ValidateAudience = false,
                     ValidateLifetime = true,
                     IssuerSigningKey = AuthenticationKey.GetSecurityKey(),
-                    ValidateIssuerSigningKey = true
+                    ValidateIssuerSigningKey = true,
+                    RequireSignedTokens = true,
+                    TryAllIssuerSigningKeys = true
                 };
             });
         services.AddAuthorization();
-        
         services.AddHttpContextAccessor();
         return services;
     }
