@@ -4,6 +4,7 @@ import {Typography} from "antd/lib";
 import {UserOutlined} from "@ant-design/icons";
 import React, {useState} from "react";
 import InfoSMARTModal from "./components/Info/InfoSMARTModal";
+import NotificationsModal from "./components/Notifications/NotificationsModal";
 
 const {Header, Content} = Layout;
 
@@ -14,6 +15,7 @@ interface HeaderProps {
 const AppHeader: React.FC<HeaderProps> = (props) => {
     const [selectedKey, setSelectedKey] = useState<string>("");
     const [isSmartModalVisible, setIsSmartModalVisible] = useState<boolean>(false);
+    const [isNotificationsModalVisible, setIsNotificationsModalVisible] = useState<boolean>(false);
 
     const navigate = useNavigate();
 
@@ -47,16 +49,22 @@ const AppHeader: React.FC<HeaderProps> = (props) => {
                         <Menu
                             selectedKeys={[selectedKey]}
                             onClick={({key}) => {
-                                setSelectedKey(key);
-                                navigate(key);
+                                if (key != undefined) {
+                                    setSelectedKey(key);
+                                    navigate(key);
+                                }
                             }}
                             theme="dark"
                             mode="horizontal"
                             style={{display: "flex", justifyContent: "flex-start", flex: 1}}
                         >
-                            <Menu.Item key="/" onClick={() => setIsSmartModalVisible(true)}
+                            <Menu.Item key="/smart" onClick={() => setIsSmartModalVisible(true)}
                                        style={{backgroundColor: 'transparent'}}>
                                 О SMART
+                            </Menu.Item>
+                            <Menu.Item key="notifications" onClick={() => setIsNotificationsModalVisible(true)}
+                                       style={{backgroundColor: 'transparent'}}>
+                                Уведомления
                             </Menu.Item>
                             <Menu.Item key="/editProfile" icon={<UserOutlined/>}
                                        style={{backgroundColor: 'transparent', marginLeft: 'auto'}}>
@@ -69,7 +77,12 @@ const AppHeader: React.FC<HeaderProps> = (props) => {
                         <Outlet/>
                     </div>
                 </Content>
-                <InfoSMARTModal isOpen={isSmartModalVisible} onClose={() => setIsSmartModalVisible(false)}/>
+                {isSmartModalVisible &&
+                    <InfoSMARTModal isOpen={isSmartModalVisible} onClose={() => setIsSmartModalVisible(false)}/>}
+                {isNotificationsModalVisible &&
+                    <NotificationsModal
+                        isOpen={isNotificationsModalVisible}
+                        onClose={() => setIsNotificationsModalVisible(false)}/>}
             </Layout>
         </div>
     );

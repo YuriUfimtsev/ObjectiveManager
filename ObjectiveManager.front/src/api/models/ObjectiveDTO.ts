@@ -32,7 +32,7 @@ export interface ObjectiveDTO {
      * @type {string}
      * @memberof ObjectiveDTO
      */
-    id?: string;
+    id?: string | null;
     /**
      * 
      * @type {string}

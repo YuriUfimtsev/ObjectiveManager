@@ -81,12 +81,17 @@ const ObjectivesTable: React.FC = () => {
                 onRow={objective => ({
                     onMouseEnter: () => setHoveredRowId(objective.id!),
                 })}
+                locale={{
+                    triggerAsc: 'Отсортировать по возрастанию даты',
+                    cancelSort: 'Отменить сортировку'
+                }}
             >
                 <Column
                     align="center"
                     title="Название"
                     dataIndex="definition"
                     key="definition"
+                    filterSearch={true}
                 />
                 <Column
                     title={
@@ -134,12 +139,17 @@ const ObjectivesTable: React.FC = () => {
                     align="center"
                     render={(_: any, objective: ObjectiveDTO) =>
                         DateTimeUtils.renderDateWithoutHours(objective.finalDate!)}
+                    defaultSortOrder="ascend"
+                    sorter={(a: ObjectiveDTO, b: ObjectiveDTO) =>
+                        new Date(a.finalDate!).getTime() - new Date(b.finalDate!).getTime()}
+                    sortDirections={["ascend"]}
                 />
                 <Column
                     title="Комментарий"
                     align="center"
                     dataIndex="comment"
                     key="comment"
+                    width={500}
                 />
                 <Column
                     align="center"

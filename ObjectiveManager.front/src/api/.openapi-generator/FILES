@@ -1,11 +1,15 @@
 apis/AccountApi.ts
+apis/FrequencyApi.ts
+apis/NotificationsApi.ts
 apis/ObjectivesApi.ts
 apis/StatusesApi.ts
 apis/index.ts
 index.ts
 models/AccountData.ts
 models/EditAccountDto.ts
+models/FrequencyValueDTO.ts
 models/LoginViewModel.ts
+models/NotificationDTO.ts
 models/ObjectiveDTO.ts
 models/RegisterDto.ts
 models/StatusObjectDTO.ts
