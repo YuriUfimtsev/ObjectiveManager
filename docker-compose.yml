@@ -52,6 +52,8 @@ services:
       dockerfile: NotificationsService.Api/Dockerfile
     depends_on:
       - postgres
+      - objective_service.api
+      - auth_service.api
     environment:
       - ASPNETCORE_URLS=http://+:5003
       - ASPNETCORE_ENVIRONMENT=Development
@@ -68,7 +70,7 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - pg_data:/var/lib/postgresql/development_data
+      - pg_data:/var/lib/postgresql/data
       - ./docker-postgresql-multiple-databases:/docker-entrypoint-initdb.d
 
 volumes:

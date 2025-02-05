@@ -1,7 +1,7 @@
 ﻿namespace ObjectiveManager.Models.ObjectivesService.DTO;
 
 public record ObjectiveDTO(
-    Guid Id,
+    string Id,
     string Definition,
     DateTimeOffset FinalDate,
     string Comment,

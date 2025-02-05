@@ -17,4 +17,7 @@ public static class RequestHeaderBuilder
         
         request.Headers.Add(UserIdHeader, userId.Value);
     }
+    
+    public static void AddUserIdToHeader(this HttpRequestMessage request, string userId)
+        =>request.Headers.Add(UserIdHeader, userId);
 }

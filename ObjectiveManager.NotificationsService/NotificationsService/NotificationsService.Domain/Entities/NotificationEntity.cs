@@ -7,7 +7,6 @@ public record NotificationEntity : IEntity<Guid>
     public Guid Id { get; set; }
     
     public required string UserId { get; init; }
-    public required bool IsMentor { get; init; }
     
     public required DateTimeOffset NextNotificationTime { get; set; }
     

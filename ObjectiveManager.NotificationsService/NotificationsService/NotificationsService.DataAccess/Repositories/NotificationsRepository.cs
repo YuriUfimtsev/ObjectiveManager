@@ -21,6 +21,11 @@ public class NotificationsRepository : CrudRepository<Guid, NotificationEntity>,
         => await Context.Set<NotificationEntity>()
             .Include(obj => obj.FrequencyValue)
             .FirstOrDefaultAsync(obj => obj.Id == id);
+    
+    public new async Task<List<NotificationEntity>> GetAll()
+        => await Context.Set<NotificationEntity>()
+            .Include(obj => obj.FrequencyValue)
+            .ToListAsync();
 
     public async Task<NotificationEntity?> GetForUser(string userId)
         => await Context.Set<NotificationEntity>()
@@ -32,7 +37,6 @@ public class NotificationsRepository : CrudRepository<Guid, NotificationEntity>,
             baseNotification => new NotificationEntity
             {
                 UserId = baseNotification.UserId,
-                IsMentor = baseNotification.IsMentor,
                 NextNotificationTime = baseNotification.NextNotificationTime,
 
                 FrequencyValueId = frequencyValueId
@@ -43,7 +47,6 @@ public class NotificationsRepository : CrudRepository<Guid, NotificationEntity>,
             baseNotification => new NotificationEntity
             {
                 UserId = baseNotification.UserId,
-                IsMentor = baseNotification.IsMentor,
                 FrequencyValueId = baseNotification.FrequencyValueId,
 
                 NextNotificationTime = nextNotificationTime

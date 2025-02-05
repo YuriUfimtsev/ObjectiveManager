@@ -4,7 +4,7 @@ namespace NotificationsService.Client;
 
 public static class ConfigurationExtensions
 {
-    public static IServiceCollection AddObjectivesServiceClient(this IServiceCollection services)
+    public static IServiceCollection AddNotificationsServiceClient(this IServiceCollection services)
     {
         services.AddScoped<INotificationsServiceClient, NotificationsServiceClient>();
         return services;

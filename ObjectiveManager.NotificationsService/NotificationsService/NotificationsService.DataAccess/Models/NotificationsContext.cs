@@ -22,7 +22,7 @@ public class NotificationsContext : DbContext
             new FrequencyValueEntity { Id = 1, Name = "Раз в день", IntervalInHours = 24 },
             new FrequencyValueEntity { Id = 2, Name = "Раз в неделю", IntervalInHours = 168 },
             new FrequencyValueEntity { Id = 3, Name = "Раз в две недели", IntervalInHours = 336 },
-            new FrequencyValueEntity { Id = 1, Name = "Раз в четыре недели", IntervalInHours = 672 }
+            new FrequencyValueEntity { Id = 4, Name = "Раз в четыре недели", IntervalInHours = 672 }
         );
     }
 

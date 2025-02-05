@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ObjectiveManager.Models.EntityFramework.Infrastructure;
 using ObjectiveManager.Models.ObjectivesService.DTO;
 using ObjectivesService.Application.Dto;
 using ObjectivesService.Application.Services.Interfaces;

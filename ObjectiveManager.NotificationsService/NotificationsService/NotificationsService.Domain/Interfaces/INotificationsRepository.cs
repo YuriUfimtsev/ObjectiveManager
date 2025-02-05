@@ -7,6 +7,8 @@ public interface INotificationsRepository
     public Task<Guid> Create(NotificationEntity notification);
     
     public Task<NotificationEntity?> Get(Guid id);
+
+    public Task<List<NotificationEntity>> GetAll();
     
     public Task<NotificationEntity?> GetForUser(string userId);
     

@@ -44,7 +44,7 @@ public class ObjectivesController : ControllerBase
     [ProducesResponseType(typeof(ObjectiveDTO[]), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll()
     {
-        var objectives = await _objectivesServiceClient.GetAllObjectives();
+        var objectives = await _objectivesServiceClient.GetAllUserObjectives();
         return Ok(objectives);
     }
 

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
-using NotificationsService.Application.DTO;
 using NotificationsService.Application.Services.Interfaces;
+using NotificationsService.DataAccess.Models;
+using NotificationsService.Domain;
 using NotificationsService.Domain.Entities;
 using NotificationsService.Domain.Interfaces;
+using ObjectiveManager.Models.EntityFramework.Infrastructure;
 using ObjectiveManager.Models.NotificationsService.DTO;
 using ObjectiveManager.Models.Result;
 
@@ -11,17 +13,29 @@ namespace NotificationsService.Application.Services;
 public class NotificationsService : INotificationsService
 {
     private readonly INotificationsRepository _notificationsRepository;
+    private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IMapper _mapper;
 
-    public NotificationsService(INotificationsRepository notificationsRepository, IMapper mapper)
+    public NotificationsService(INotificationsRepository notificationsRepository, IMapper mapper, IDateTimeProvider dateTimeProvider)
     {
         _notificationsRepository = notificationsRepository;
         _mapper = mapper;
+        _dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<Guid> Create(CreateNotificationDTO createNotificationDto)
+    public async Task<Guid> Create(string userId)
     {
-        var notification = _mapper.Map<NotificationEntity>(createNotificationDto);
+        var defaultFrequencyId = DefaultFrequency.Id;
+
+        var now = _dateTimeProvider.Now();
+        var nextNotificationTime = NotificationTimeHelper.GetNextMondayNoon(now);
+        var notification = new NotificationEntity
+        {
+            UserId = userId,
+            NextNotificationTime = nextNotificationTime,
+            FrequencyValueId = defaultFrequencyId
+        };
+        
         var notificationId = await _notificationsRepository.Create(notification);
 
         return notificationId;

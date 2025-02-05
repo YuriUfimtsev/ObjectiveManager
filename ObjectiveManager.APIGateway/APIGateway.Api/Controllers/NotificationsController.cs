@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NotificationsService.Client;
 using ObjectiveManager.Models.NotificationsService.DTO;
 
 namespace APIGateway.Api.Controllers;
 
+[Authorize]
+[ApiController]
+[Route("api/[controller]")]
 public class NotificationsController : ControllerBase
 {
     private readonly INotificationsServiceClient _notificationsServiceClient;
@@ -22,14 +26,6 @@ public class NotificationsController : ControllerBase
         return notificationResult.Succeeded
             ? Ok(notificationResult.Value)
             : NotFound(notificationResult.Errors);
-    }
-
-    [HttpPost]
-    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-    public async Task<IActionResult> Create([FromQuery] NotificationPostDto notificationPostDto)
-    {
-        var notificationId = await _notificationsServiceClient.CreateNotification(notificationPostDto);
-        return Ok(notificationId);
     }
 
     [HttpPut("updateFrequency/{notificationId}")]

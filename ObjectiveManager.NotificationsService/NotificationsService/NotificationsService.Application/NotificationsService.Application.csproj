@@ -7,14 +7,17 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\ObjectiveManager.AuthService\AuthService.Client\AuthService.Client.csproj" />
       <ProjectReference Include="..\..\..\ObjectiveManager.Common\ObjectiveManager.Models\ObjectiveManager.Models.csproj" />
       <ProjectReference Include="..\..\..\ObjectiveManager.Common\ObjectiveManager.Utils\ObjectiveManager.Utils.csproj" />
+      <ProjectReference Include="..\..\..\ObjectiveManager.ObjectivesService\ObjectivesService.Client\ObjectivesService.Client.csproj" />
       <ProjectReference Include="..\NotificationsService.DataAccess\NotificationsService.DataAccess.csproj" />
       <ProjectReference Include="..\NotificationsService.Domain\NotificationsService.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="13.0.1" />
+      <PackageReference Include="MailKit" Version="4.10.0" />
     </ItemGroup>
 
 </Project>

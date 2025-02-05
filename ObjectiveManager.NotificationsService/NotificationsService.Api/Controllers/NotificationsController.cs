@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NotificationsService.Application.DTO;
 using NotificationsService.Application.Services.Interfaces;
 using ObjectiveManager.Models.NotificationsService.DTO;
 using ObjectiveManager.Models.Result;
@@ -29,17 +28,9 @@ public class NotificationsController : ControllerBase
 
     [HttpPost]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
-    public async Task<IActionResult> Create([FromBody] NotificationPostDto notificationPostDto)
+    public async Task<IActionResult> Create([FromQuery] string userId)
     {
-        var userId = Request.GetUserIdFromHeader();
-        var createNotificationDto = new CreateNotificationDTO(
-            UserId: userId,
-            IsMentor: notificationPostDto.IsMentor,
-            NextNotificationTime: notificationPostDto.NextNotificationTime,
-            FrequencyValueId: notificationPostDto.FrequencyValueId
-        );
-        
-        var notificationId = await _notificationsService.Create(createNotificationDto);
+        var notificationId = await _notificationsService.Create(userId);
         return Ok(notificationId);
     }
 

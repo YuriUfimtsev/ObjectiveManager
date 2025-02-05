@@ -34,17 +34,11 @@ public class NotificationsServiceClient : INotificationsServiceClient
         return await response.DeserializeAsync<Result<NotificationDTO>>();
     }
 
-    public async Task<string> CreateNotification(NotificationPostDto notificationPostDto)
+    public async Task<string> CreateNotification(string userId)
     {
         using var httpRequest = new HttpRequestMessage(
             HttpMethod.Post,
-            _objectivesServiceUri + "api/Notifications");
-        httpRequest.Content = new StringContent(
-            JsonConvert.SerializeObject(notificationPostDto),
-            Encoding.UTF8,
-            "application/json");
-
-        httpRequest.AddUserIdToHeader(_httpContextAccessor);
+            _objectivesServiceUri + $"api/Notifications?userId={userId}");
         
         var response = await _httpClient.SendAsync(httpRequest);
         return await response.DeserializeAsync<string>();
@@ -54,7 +48,7 @@ public class NotificationsServiceClient : INotificationsServiceClient
     {
         using var httpRequest = new HttpRequestMessage(
             HttpMethod.Put,
-            _objectivesServiceUri + $"api/Notifications/updateFrequency/{notificationId}?frequencyId={frequencyValueId}");
+            _objectivesServiceUri + $"api/Notifications/updateFrequency/{notificationId}?frequencyValueId={frequencyValueId}");
         
         var response = await _httpClient.SendAsync(httpRequest);
         return await response.DeserializeAsync<Result>();

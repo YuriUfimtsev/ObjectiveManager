@@ -5,7 +5,6 @@ using ObjectiveManager.Models.EntityFramework.Infrastructure;
 using ObjectivesService.DataAccess.Models;
 using ObjectivesService.DataAccess.Repositories;
 using ObjectivesService.Domain.Interfaces;
-using IDateTimeProvider = ObjectiveManager.Models.EntityFramework.Infrastructure.IDateTimeProvider;
 
 namespace ObjectivesService.DataAccess.Extensions;
 
@@ -25,8 +24,8 @@ public static class ServiceCollectionExtensions
         var objectivesConnectionString = configuration.GetConnectionString("ObjectivesServiceDB");
         services.AddDbContext<ObjectivesContext>(options => options.UseNpgsql(objectivesConnectionString));
         AddRepositories(services);
-        
-        services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+        services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+
         return services;
     }
 }

@@ -1,10 +1,11 @@
-﻿using System.Net;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using AuthService.Client;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NotificationsService.Client;
 using ObjectiveManager.Models.AuthService;
 using ObjectiveManager.Models.AuthService.Dto;
-using ObjectiveManager.Models.Result;
 
 namespace APIGateway.Api.Controllers;
 
@@ -13,12 +14,17 @@ namespace APIGateway.Api.Controllers;
 public class AccountController : ControllerBase
 {
     private readonly IAuthServiceClient _authServiceClient;
+    private readonly INotificationsServiceClient _notificationsServiceClient;
+    private readonly JwtSecurityTokenHandler _tokenHandler;
 
-    public AccountController(IAuthServiceClient authServiceClient)
+    public AccountController(IAuthServiceClient authServiceClient,
+        INotificationsServiceClient notificationsServiceClient, JwtSecurityTokenHandler tokenHandler)
     {
         _authServiceClient = authServiceClient;
+        _notificationsServiceClient = notificationsServiceClient;
+        _tokenHandler = tokenHandler;
     }
-    
+
     [Authorize]
     [HttpGet("userData")]
     [ProducesResponseType(typeof(AccountData), (int)HttpStatusCode.OK)]
@@ -36,10 +42,22 @@ public class AccountController : ControllerBase
     [ProducesResponseType(typeof(string[]), (int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> Register([FromBody] RegisterDto model)
     {
+        // Регистрируем пользователя
         var tokenCredentialsResult = await _authServiceClient.RegisterUser(model);
-        return tokenCredentialsResult.Succeeded
-            ? Ok(tokenCredentialsResult.Value)
-            : BadRequest(tokenCredentialsResult.Errors);
+        if (!tokenCredentialsResult.Succeeded)
+        {
+            return BadRequest(tokenCredentialsResult.Errors);
+        }
+
+        // В случае успешной регистрации создаем объект для нотификаций.
+        // Пока у пользователя будет 0 целей, нотификации не отправляются
+        var userId = _tokenHandler.ReadJwtToken(tokenCredentialsResult.Value.AccessToken)
+            .Claims
+            .FirstOrDefault(claim => claim.Type == "_id")?
+            .Value;
+        await _notificationsServiceClient.CreateNotification(userId!);
+        
+        return Ok(tokenCredentialsResult.Value);
     }
 
     [HttpPost("login")]
@@ -52,7 +70,7 @@ public class AccountController : ControllerBase
             ? Ok(tokenCredentialsResult.Value)
             : NotFound(tokenCredentialsResult.Errors);
     }
-    
+
     [Authorize]
     [HttpPut("edit")]
     [ProducesResponseType((int)HttpStatusCode.OK)]

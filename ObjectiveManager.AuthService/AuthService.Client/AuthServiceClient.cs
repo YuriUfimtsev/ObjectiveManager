@@ -23,12 +23,20 @@ public class AuthServiceClient : IAuthServiceClient
         _authServiceUri = new Uri(configuration.GetSection("Services")["Auth"]);
     }
     
-    public async Task<Result<AccountData>> GetUserData()
+    public async Task<Result<AccountData>> GetUserData(string userId = "")
     {
         using var httpRequest = new HttpRequestMessage(
             HttpMethod.Get,
             _authServiceUri + $"api/Account/userData");
-        httpRequest.AddUserIdToHeader(_httpContextAccessor);
+        
+        if (userId != string.Empty)
+        {
+            httpRequest.AddUserIdToHeader(userId);
+        }
+        else
+        {
+            httpRequest.AddUserIdToHeader(_httpContextAccessor);
+        }
 
         var response = await _httpClient.SendAsync(httpRequest);
         return await response.DeserializeAsync<Result<AccountData>>();

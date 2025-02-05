@@ -17,7 +17,7 @@ public static class NotificationTimeHelper
             daysUntilNextMonday = 7;
         }
 
-        // Возвращаем ноый объект DateTimeOffset с датой ближайшего понедельника и временем: 12:00
+        // Возвращаем новый объект DateTimeOffset с датой ближайшего понедельника и временем: 12:00
         DateTimeOffset nextMondayNoon = new DateTimeOffset(
             now.Year,
             now.Month,

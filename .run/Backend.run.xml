@@ -2,6 +2,7 @@
   <configuration default="false" name="Backend" type="CompoundRunConfigurationType">
     <toRun name="APIGateway.Api: ObjectiveManager.APIGateway.Api" type="LaunchSettings" />
     <toRun name="AuthService.Api: ObjectiveManager.AuthService.Api" type="LaunchSettings" />
+    <toRun name="NotificationsService.Api: ObjectiveManager.NotificationsService.Api" type="LaunchSettings" />
     <toRun name="ObjectivesService.Api: ObjectiveManager.ObjectivesService.Api" type="LaunchSettings" />
     <method v="2" />
   </configuration>

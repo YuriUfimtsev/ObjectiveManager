@@ -60,8 +60,6 @@ public static class StartupExtensions
 
         // TODO: вынести securityKey в один .env файл для всех сервисов
         DotEnv.Load();
-        var result = EnvReader.HasValue("AppSecurityKey");
-
         services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

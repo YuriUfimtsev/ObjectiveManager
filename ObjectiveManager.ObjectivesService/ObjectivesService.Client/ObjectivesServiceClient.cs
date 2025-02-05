@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Text;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using ObjectiveManager.Models.ObjectivesService.DTO;
@@ -24,13 +23,20 @@ public class ObjectivesServiceClient : IObjectivesServiceClient
         _objectivesServiceUri = new Uri(configuration.GetSection("Services")["Objectives"]);
     }
 
-    public async Task<ObjectiveDTO[]> GetAllObjectives()
+    public async Task<ObjectiveDTO[]> GetAllUserObjectives(string userId = "")
     {
         using var httpRequest = new HttpRequestMessage(
             HttpMethod.Get,
             _objectivesServiceUri + "api/Objectives/all");
 
-        httpRequest.AddUserIdToHeader(_httpContextAccessor);
+        if (userId != string.Empty)
+        {
+            httpRequest.AddUserIdToHeader(userId);
+        }
+        else
+        {
+            httpRequest.AddUserIdToHeader(_httpContextAccessor);
+        }
 
         var response = await _httpClient.SendAsync(httpRequest);
         return await response.DeserializeAsync<ObjectiveDTO[]>();
@@ -41,6 +47,7 @@ public class ObjectivesServiceClient : IObjectivesServiceClient
         using var httpRequest = new HttpRequestMessage(
             HttpMethod.Get,
             _objectivesServiceUri + $"api/Objectives/{objectiveId}");
+        httpRequest.AddUserIdToHeader(_httpContextAccessor);
 
         var response = await _httpClient.SendAsync(httpRequest);
         return response.StatusCode switch
@@ -126,11 +133,20 @@ public class ObjectivesServiceClient : IObjectivesServiceClient
         };
     }
     
-    public async Task<Result<StatusObjectDTO[]>> GetStatusesHistory(string objectiveId)
+    public async Task<Result<StatusObjectDTO[]>> GetStatusesHistory(string objectiveId, string userId = "")
     {
         using var httpRequest = new HttpRequestMessage(
             HttpMethod.Get,
             _objectivesServiceUri + $"api/Objectives/statusHistory/{objectiveId}");
+
+        if (userId != string.Empty)
+        {
+            httpRequest.AddUserIdToHeader(userId);
+        }
+        else
+        {
+            httpRequest.AddUserIdToHeader(_httpContextAccessor);
+        }
 
         var response = await _httpClient.SendAsync(httpRequest);
         return response.StatusCode switch
