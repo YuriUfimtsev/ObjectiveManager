@@ -116,6 +116,7 @@ const ObjectivesTable: React.FC = () => {
                                     }}
                                     style={{
                                         fontSize: "small",
+                                        color: "#2047F8"
                                     }}/>
                             )}
                             {objective.statusObject?.statusValue?.name ?? 'Без названия'}
@@ -129,6 +130,7 @@ const ObjectivesTable: React.FC = () => {
                                     }}
                                     style={{
                                         fontSize: "small",
+                                        color: "#2047F8"
                                     }}/>
                             )}
                         </Space>
@@ -181,11 +183,8 @@ const ObjectivesTable: React.FC = () => {
                                     }}
                                     style={{
                                         fontSize: "medium",
+                                        color: "#2047F8"
                                     }}
-                                />
-                                <DeleteObjectiveModal
-                                    objective={selectedObjective}
-                                    onClose={() => setObjectivesAreChanged(true)}
                                 />
                             </Space>
                         )}
