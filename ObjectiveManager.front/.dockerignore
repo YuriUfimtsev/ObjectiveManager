@@ -1,0 +1,5 @@
+﻿bin\
+obj\
+**/*.sln
+node_modules
+npm-debug.log

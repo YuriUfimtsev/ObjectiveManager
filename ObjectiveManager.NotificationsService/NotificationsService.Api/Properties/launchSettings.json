@@ -1,0 +1,18 @@
+﻿{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "ObjectiveManager.NotificationsService.Api": {
+      "commandName": "Project",
+      "applicationUrl": "http://localhost:5003",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
+      "publishAllPorts": true
+    }
+  }
+}
